@@ -1,5 +1,10 @@
 import React from 'react';
 import '../styles/StarForm.css'
+import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
 
 export default class StarForm extends React.Component {
     constructor(props) {
@@ -7,7 +12,7 @@ export default class StarForm extends React.Component {
         this.state = {
             
 
-            starName: props.star ? props.star.starName : 'Uknown Star',
+            starName: props.star ? props.star.starName : '',
             energyOrMassValue: props.star ? props.star.energyOrMassValue : '',
             model: props.star ? props.star.model : 'model',
             radius: props.star ? props.star.radius : '',
@@ -96,54 +101,68 @@ export default class StarForm extends React.Component {
         this.setState(() => ({ radius }));
     };
 
+    handleSelectChange = (e) => {
+        switch (e.target.value) {
+            case 'model':
+                this.setState(() => ({ model: 'model', energyOrMass: 'energy' }));
+                break;
+            case 'gmass':
+                this.setState(() => ({ model: 'gmass', energyOrMass: 'mass' }));
+                break;
+        
+            default:
+                    this.setState(() => ({ model: null }))
+                break;
+        }
+    };
 
     render() {
         return (
             <div>
                 {this.state.error && <p>{this.state.error}</p>}
                 <form onSubmit={this.onSubmit} className="container">
-                    <input
-                        type="text"
-                        placeholder="Star Name"
-                        autoFocus
+                    <TextField
+                        id="standard-with-placeholder"
+                        label="Star Model Name"
+                        placeholder="Add a Name"
+                        margin="normal"
                         value={this.state.starName}
                         onChange={this.onstarNameChange}
                     />
-                    <select value={this.state.model} onChange={(e) => {
-                        switch (e.target.value) {
-                            case 'model':
-                                this.setState(() => ({ model: 'model', energyOrMass: 'energy' }));
-                                break;
-                            case 'gmass':
-                                this.setState(() => ({ model: 'gmass', energyOrMass: 'mass' }));
-                                break;
+                    <InputLabel htmlFor="age-helper">Model Type</InputLabel>
+                    <Select
+                        value={this.state.model}
+                        onChange={this.handleSelectChange}
                         
-                            default:
-                                    this.setState(() => ({ model: null }))
-                                break;
-                        }
-                    }}>
-                        <option value="model">model</option>
-                        <option value="gmass">gmass</option>
-                        <option value="rmass">rmass</option>
-                        <option value="omega">omega</option>
-                        <option value="jmoment">jmoment</option>
-                        <option value="static">static</option>
-                        <option value="kepler">kelper</option>
-                        <option value="test">test</option>
-                    </select>
-                    <input
-                        type="text"
+                    >
+                        
+                        <MenuItem value="model">model</MenuItem>
+                        <MenuItem value="gmass">gmass</MenuItem>
+                        <MenuItem value="rmass">rmass</MenuItem>
+                        <MenuItem value="omega">omega</MenuItem>
+                        <MenuItem value="jmoment">jmoment</MenuItem>
+                        <MenuItem value="static">static</MenuItem>
+                        <MenuItem value="kepler">kepler</MenuItem>
+                        <MenuItem value="test">test</MenuItem>
+                    </Select>
+
+                    <TextField
+                        id="standard-with-placeholder"
+                        label={this.state.energyOrMass === 'energy' ? 'Energy Value' : 'Mass Value'}
                         placeholder={this.state.energyOrMass === 'energy' ? 'Energy' : 'Mass'}
+                        margin="normal"
                         value={this.state.energyOrMassValue}
                         onChange={this.onEnergyOrMassValueChange}
                     />
-                    <input 
-                        type="text" 
-                        placeholder="radius" 
+                    <TextField
+                        id="standard-with-placeholder"
+                        label="Radius Value"
+                        placeholder="Radius" 
+                        margin="normal"
                         value={this.state.radius} 
                         onChange={this.onRadiusChange}
                     />
+                   
                     <select 
                         value={this.state.limit}
                         onChange = {(e) => {
