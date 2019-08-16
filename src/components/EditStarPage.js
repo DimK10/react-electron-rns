@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import StarForm from './StarForm';
-import { editStar, removeStar } from '../actions/stars';
+import { editStar } from '../actions/stars';
 
 
 export class EditStarPage extends React.Component{
@@ -10,20 +10,14 @@ export class EditStarPage extends React.Component{
       this.props.history.push('/');
     };
   
-    onRemove = () => {
-      this.props.removeStar({ id: this.props.star.id });
-      this.props.history.push('/');
-    }
-  
     render() {
       return (
-        <div>
           <StarForm
             star={this.props.star}
             onSubmit={this.onSubmit}
+            history={this.props.history}
+            onEdit={true}
           />
-          <button onClick={this.onRemove}>Remove</button>
-        </div>
       );
     }
   };
@@ -36,7 +30,6 @@ export class EditStarPage extends React.Component{
   
   const mapDispatchToProps = (dispach, props) => ({
       editStar: (id, expense) => dispach(editStar(id, expense)),
-      removeStar: (data) => dispach(removeStar(data))
   });
   
   export default connect(mapStateToProps, mapDispatchToProps)(EditStarPage);

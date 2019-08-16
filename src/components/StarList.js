@@ -14,7 +14,7 @@ const StarList = (props) => {
         <div className="container">
             <Typography variant="h4">Star Models List</Typography>
             {props.stars.map((star) => {
-                return <StarListItem key={star.id} {...star} />
+                return <StarListItem key={star.id} star={star} />
             })}
         </div>
     )

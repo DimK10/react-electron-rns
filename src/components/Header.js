@@ -81,29 +81,9 @@ const Header = () => {
                   <Typography variant="h6" color="inherit">
                       Rapidly Rotating Neutron Star Model Constructor
                   </Typography>
-                  <div className={classes.search}>
-                      <div className={classes.searchIcon}>
-                      <SearchIcon />
-                      </div>
-                      <InputBase
-                      placeholder="Search…"
-                      classes={{
-                          root: classes.inputRoot,
-                          input: classes.inputInput,
-                      }}
-                      inputProps={{ 'aria-label': 'search' }}
-                      />
-                  </div>
               </Toolbar>
           </AppBar>
-          <div className={classes.links}>
-            <NavLink to="/create" activeClassName="is-active">
-                  <Fab variant="extended" color="primary" aria-label="add" className={classes.fab}>
-                      <AddIcon />  Add A Model
-                  </Fab>
-              </NavLink>
-              <NavLink to="/" activeClassName="is-active">Dashboard</NavLink>
-          </div>
+          
        </div>
     )};
 

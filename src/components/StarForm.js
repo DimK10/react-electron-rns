@@ -4,9 +4,13 @@ import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import { connect } from 'react-redux';
+import { removeStar } from '../actions/stars';
 
-export default class StarForm extends React.Component {
+
+class StarForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -101,7 +105,7 @@ export default class StarForm extends React.Component {
         this.setState(() => ({ radius }));
     };
 
-    handleSelectChange = (e) => {
+    handleModelSelectChange = (e) => {
         switch (e.target.value) {
             case 'model':
                 this.setState(() => ({ model: 'model', energyOrMass: 'energy' }));
@@ -116,10 +120,29 @@ export default class StarForm extends React.Component {
         }
     };
 
+    handleLimitSelectChange = (e) => {
+        if(e.target.value === 'limitEnergyOrMass') {
+            this.setState(() => ({ limit: 'limitEnergyOrMass' }))
+        }else if (e.target.value === 'limitRadius') {
+            this.setState(() => ({ limit: 'limitRadius' }))
+        }else {
+            this.setState(() => ({ limit: null }))
+        };
+    };
+
+    onClickBack = () => {        
+        this.props.history.push('/');
+    };
+
+    handleOnRemoveModel = () => {
+        this.props.removeStar({ id: this.props.star.id });
+        this.props.history.push('/');
+    }
+
     render() {
         return (
             <div>
-                {this.state.error && <p>{this.state.error}</p>}
+                {this.state.error && <Typography color="error" variant="subtitle2">{this.state.error}</Typography>}
                 <form onSubmit={this.onSubmit} className="container">
                     <TextField
                         id="standard-with-placeholder"
@@ -132,7 +155,7 @@ export default class StarForm extends React.Component {
                     <InputLabel htmlFor="age-helper">Model Type</InputLabel>
                     <Select
                         value={this.state.model}
-                        onChange={this.handleSelectChange}
+                        onChange={this.handleModelSelectChange}
                         
                     >
                         
@@ -162,51 +185,73 @@ export default class StarForm extends React.Component {
                         value={this.state.radius} 
                         onChange={this.onRadiusChange}
                     />
-                   
-                    <select 
+
+                    <InputLabel htmlFor="age-helper">Select Limit</InputLabel>
+                    <Select
                         value={this.state.limit}
-                        onChange = {(e) => {
-                            if(e.target.value === 'limitEnergyOrMass') {
-                                this.setState(() => ({ limit: 'limitEnergyOrMass' }))
-                            }else if (e.target.value === 'limitRadius') {
-                                this.setState(() => ({ limit: 'limitRadius' }))
-                            }else {
-                                this.setState(() => ({ limit: null }))
-                            };
-                        }}
+                        onChange={this.handleLimitSelectChange}
+                        
                     >
-                        <option value="none">No Limit Set</option>
-                        <option value="limitEnergyOrMass">Set Limit on {this.state.energyOrMass}</option>
-                        <option value="limitRadius">Set Limit on Radius</option>
-                    </select>
-                    <p>Number of Individual Dots to Measure (Default is zero):</p>
+                        
+                        <MenuItem value="none">No Limit Set</MenuItem>
+                        <MenuItem value="limitEnergyOrMass">Set Limit on {this.state.energyOrMass}</MenuItem>
+                        <MenuItem value="limitRadius">Set Limit on Radius</MenuItem>
+                       
+                    </Select>
+
                     {
                         this.state.limit !== 'none' 
                         && 
-                        <input 
-                            type="text" 
-                            placeholder={'Limit on ' + this.state.energyOrMass} 
-                            value={this.state.limitValue}
+                        <TextField
+                            id="standard-with-placeholder"
+                            label={'Limit on ' + this.state.energyOrMass}
+                            placeholder="0"
+                            margin="normal"
+                            value={this.state.limitValue === '0' ? '' : this.state.limitValue}
                             onChange={this.onLimitChange}
                         />
+                        
                     }
-                    <input 
-                        type="text" 
-                        placeholder="0" 
-                        value={this.state.measurements}
+
+                    <TextField
+                        id="standard-with-placeholder"
+                        label="How Many Measurements"
+                        placeholder="0"
+                        margin="normal"
+                        value={this.state.measurements === '0' ? '' : this.state.measurements}
                         onChange={this.onNumberOfMeasurementsChange}
                     />
-                    
-                    <p>How many first readings to ignore (default is zero):</p>
-                    <input 
-                        type="text" 
+                    <TextField
+                        id="standard-with-placeholder"
+                        label="Readings to Ignore"
                         placeholder="0"
-                        value={this.state.readingsIgnored} 
+                        margin="normal"
+                        value={this.state.readingsIgnored === '0' ? '' : this.state.readingsIgnored}
                         onChange={this.onReadingsIgnoredChange}
                     />
-                    <button>{this.props.onEdit ? 'Edit Star' : 'Add Star'}</button>
+                   
+                    
+                    <Button type="submit" variant="contained" color="secondary">
+                        {this.props.onEdit ? 'Edit Star' : 'Add Star'}
+                    </Button>
+                    <Button variant="contained" onClick={this.onClickBack}>
+                        Back
+                    </Button>
+                    {
+                        !this.props.onEdit
+                        ? undefined
+                        :   <Button variant="contained" onClick={this.handleOnRemoveModel}>
+                                Remove Model
+                            </Button>
+                    }
                 </form>
             </div>
         )
     }
 }
+
+const mapDispatchToProps = (dispach, props) => ({
+    removeStar: (data) => dispach(removeStar(data))
+});
+
+export default connect(undefined, mapDispatchToProps)(StarForm);

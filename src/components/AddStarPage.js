@@ -20,6 +20,8 @@ class AddStarPage extends React.Component {
                 </Typography>
                 <StarForm
                     onSubmit={this.onSubmit}
+                    history={this.props.history}
+                    onEdit={false}
                 />
            </div>  
         );
