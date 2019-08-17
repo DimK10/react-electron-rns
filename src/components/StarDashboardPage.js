@@ -1,8 +1,6 @@
 import React from 'react';
 import StarList from './StarList';
 import { NavLink } from 'react-router-dom';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
