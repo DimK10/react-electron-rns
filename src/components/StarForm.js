@@ -157,8 +157,7 @@ class StarForm extends React.Component {
                         value={this.state.model}
                         onChange={this.handleModelSelectChange}
                         
-                    >
-                        
+                    >     
                         <MenuItem value="model">model</MenuItem>
                         <MenuItem value="gmass">gmass</MenuItem>
                         <MenuItem value="rmass">rmass</MenuItem>
