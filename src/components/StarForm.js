@@ -15,12 +15,27 @@ class StarForm extends React.Component {
         super(props);
         this.state = {
             
-
+            /*
             starName: props.star ? props.star.starName : '',
             energyOrMassValue: props.star ? props.star.energyOrMassValue : '',
             model: props.star ? props.star.model : 'model',
             radius: props.star ? props.star.radius : '',
             energyOrMass: props.star ? props.star.energyOrMass : 'energy',
+            measurements: props.star ? props.star.measurements : '0',
+            limit: props.star ? props.star.limit : 'none',
+            limitValue: props.star ? props.star.limitValue : '0',
+            readingsIgnored: props.star ? props.star.readingsIgnored : '0',
+            error: ''
+            */
+            starName: props.star ? props.star.starName : '',
+            centralEnergyDensity: props.star ? props.star.centralEnergyDensity : '',
+            axesRatio: props.star ? props.star.axesRatio : '',
+            mass: props.star ? props.star.mass : '',
+            restMass: props.star ? process.star.restMass : '',
+            angularVelocity: props.star ? props.star.angularVelocity : '',
+            angularMomentum: props.star ? props.star.angularMomentum : '',
+            tolerance: props.star ? props.star.tolerance : '',
+            model: props.star ? props.star.model : 'model',
             measurements: props.star ? props.star.measurements : '0',
             limit: props.star ? props.star.limit : 'none',
             limitValue: props.star ? props.star.limitValue : '0',
@@ -40,6 +55,7 @@ class StarForm extends React.Component {
 
             this.setState(() => ({ error: '' }))
             this.props.onSubmit({
+                /*
                 starName: this.state.starName,
                 energyOrMassValue: this.state.energyOrMassValue,
                 model: this.state.model,
@@ -49,6 +65,21 @@ class StarForm extends React.Component {
                 limit: this.state.limit,
                 limitValue: this.state.limitValue,
                 readingsIgnored: parseInt(this.state.readingsIgnored)
+                */
+                starName: this.state.starName,
+                centralEnergyDensity: this.state.centralEnergyDensity,
+                axesRatio: this.state.axesRatio,
+                mass: this.state.mass,
+                restMass: this.state.restMass,
+                angularVelocity: this.state.angularVelocity,
+                angularMomentum: this.state.angularMomentum,
+                tolerance: this.state.tolerance,
+                model: this.state.model,
+                measurements: this.state.measurements,
+                limit: this.state.limit,
+                limitValue: this.state.limitValue,
+                readingsIgnored: this.state.readingsIgnored,
+
             });
         }
     };
@@ -58,10 +89,7 @@ class StarForm extends React.Component {
         this.setState(() => ({ starName }));
     };
 
-    onEnergyOrMassValueChange = (e) => {
-        const energyOrMassValue = e.target.value;
-        this.setState(() => ({ energyOrMassValue }));
-    };
+   
 
     onNumberOfMeasurementsChange = (e) => {
         const measurements = e.target.value;
@@ -100,10 +128,6 @@ class StarForm extends React.Component {
         };
     }
 
-    onRadiusChange = (e) => {
-        const radius = e.target.value;
-        this.setState(() => ({ radius }));
-    };
 
     handleModelSelectChange = (e) => {
         switch (e.target.value) {
@@ -139,6 +163,80 @@ class StarForm extends React.Component {
         this.props.history.push('/');
     }
 
+
+    onEnergyChange = (e) => {
+        const centralEnergyDensity = e.target.value;
+        this.setState(() => ({ centralEnergyDensity }));
+    };
+
+
+    labelForSecondInput = () => {
+        switch (this.state.model) {
+            case 'model':
+                return 'Axes Ratio Value'
+            case 'gmass':
+                return 'Mass Value'
+            case 'rmass':
+                return 'Rest Mass Value'
+            case 'omega':
+                return 'Angular Velocity Value'
+            case 'jmoment':
+                return 'Angular Momentum Value'
+            case 'kepler':
+                return 'Tolerance Value'
+            default:
+                return 'Axes Ratio Value'
+        };
+    };
+
+    valueForSecondInput = () => {
+        switch (this.state.model) {
+            case 'model':
+                return this.state.axesRatio
+            case 'gmass':
+                return this.state.mass
+            case 'rmass':
+                return this.state.restMass
+            case 'omega':
+                return this.state.angularVelocity
+            case 'jmoment':
+                return this.state.angularMomentum
+            case 'kepler':
+                return this.state.tolerance
+            default:
+                return this.state.axesRatio
+        };
+    };
+
+
+    onSecondInputChange = (e) => {
+        const value = e.target.value;
+
+        switch (this.state.model) {
+            case 'model':
+                this.setState(() => ({ axesRatio: value }));
+                break;
+            case 'gmass':
+                this.setState(() => ({ mass: value }));
+                break;
+            case 'rmass':
+                this.setState(() => ({ restMass: value }));
+                break;
+            case 'omega':
+                this.setState(() => ({ angularVelocity: value }));
+                break;
+            case 'jmoment':
+                this.setState(() => ({ angularMomentum: value }));
+                break;
+            case 'kepler':
+                this.setState(() => ({ tolerance: value }));
+                break;
+            default:
+                this.setState(() => ({ axesRatio: value }));
+                break;
+        };
+    };
+
     render() {
         return (
             <div>
@@ -170,19 +268,19 @@ class StarForm extends React.Component {
 
                     <TextField
                         id="standard-with-placeholder"
-                        label={this.state.energyOrMass === 'energy' ? 'Energy Value' : 'Mass Value'}
-                        placeholder={this.state.energyOrMass === 'energy' ? 'Energy' : 'Mass'}
+                        label="Central Energy Density Value"
+                        placeholder="0"
                         margin="normal"
-                        value={this.state.energyOrMassValue}
-                        onChange={this.onEnergyOrMassValueChange}
+                        value={this.state.centralEnergyDensity}
+                        onChange={this.onEnergyChange}
                     />
                     <TextField
                         id="standard-with-placeholder"
-                        label="Radius Value"
-                        placeholder="Radius" 
+                        label={this.labelForSecondInput}
+                        placeholder="0" 
                         margin="normal"
-                        value={this.state.radius} 
-                        onChange={this.onRadiusChange}
+                        value={this.valueForSecondInput} 
+                        onChange={this.onSecondInputChange}
                     />
 
                     <InputLabel htmlFor="age-helper">Select Limit</InputLabel>
