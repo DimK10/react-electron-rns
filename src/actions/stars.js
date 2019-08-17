@@ -4,11 +4,12 @@ import uuid from 'uuid';
 export const addStar = (
     {
       starName = 'Uknown Star',
-      energyOrMassValue = 0,
+      centralEnergyDensity = 0,
+      tolerance = 0,
+      labelForSecondInput = '',
+      valueForSecondInput = 0,
       model = 'model',
-      radius = 0,
-      energyOrMass = 'energy',
-      measurements = 0,
+      measurements = 'measurements',
       limit = 'none',
       limitValue = 0,
       readingsIgnored = 0
@@ -18,13 +19,15 @@ export const addStar = (
     star: {
       id: uuid(),
       starName,
-      energyOrMassValue,
+      centralEnergyDensity,
+      tolerance,
+      labelForSecondInput,
+      valueForSecondInput,
       model,
-      radius,
-      energyOrMass,
       measurements,
       limit,
       limitValue,
+      readingsIgnored,
       readingsIgnored
     }
   });

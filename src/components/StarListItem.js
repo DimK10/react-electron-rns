@@ -44,6 +44,29 @@ const StarListItem = (props) => {
             props.removeStar({ id: props.star.id });
         };
 
+        const renderSecondValueSwitch = (props) => {
+            switch (props.star.model) {
+                case 'model':
+                    return <Typography>Axes Ratio: {props.star.valueForSecondInput}</Typography>
+
+                default:
+                    return undefined;
+            }
+        };
+
+        const renderLimitSwitch = (props) => {
+            switch (props.star.limit) {
+                case 'none':
+                    return undefined;
+                case 'limitEnergy':
+                    return <Typography>Limit On Energy: {props.star.limitValue}</Typography>
+                case 'limitSecondValue':
+                    return <Typography>Limit on {props.star.labelForSecondInput}: {props.star.limitValue}</Typography>
+                default:
+                    return undefined;
+            }
+        };
+        console.log(props.star);
         return (
             <div className={classes.fabWrapper}>
                 <ExpansionPanel>
@@ -55,19 +78,12 @@ const StarListItem = (props) => {
                     <Typography className={classes.heading}>{props.star.starName}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.root}>
-                        {
-                            props.star.energyOrMass === 'energy' ? (
-                                <Typography>Energy: {props.star.energyOrMassValue}</Typography>
-                            ) : (
-                                <Typography>Mass: {props.star.energyOrMassValue}</Typography>
-                            )
-                        }
-                        <Typography>Radius: {props.star.radius}</Typography>
                         <Typography>Model: {props.star.model}</Typography>
-                        {props.star.limit !== 'none' && <Typography>Limit on {props.star.limit}: {props.star.limitValue}</Typography>}
+                        <Typography>Energy: {props.star.centralEnergyDensity}</Typography>
+                        {renderSecondValueSwitch(props)}
+                        {renderLimitSwitch(props)}
                         {props.star.measurements !== 0 && <Typography>Individual Dots to measure: {props.star.measurements}</Typography>}
                         <Typography>Readings Ignored: {props.star.readingsIgnored}</Typography>
-                        
                 </ExpansionPanelDetails>
                 </ExpansionPanel>
                 <div>
@@ -90,24 +106,3 @@ const mapDispatchToProps = (dispach, props) => ({
 
 
 export default connect(undefined, mapDispatchToProps)(StarListItem);
-
-
-
-/*
-        <div>
-        <Link to={`/edit/${id}`}>
-            <h3>Star: {starName}</h3>
-        </Link>
-        {energyOrMass === 'energy' ? (
-            <p>Energy: {energyOrMassValue}</p>
-        ) : (
-            <p>Mass: {energyOrMassValue}</p>
-        )}
-        <p>Radius: {radius}</p>
-        <p>Model: {model}</p>
-        {limit !== 'none' && <p>Limit on {limit}: {limitValue}</p>}
-        {measurements !== 0 && <p>Individual Dots to measure: {measurements}</p>}
-        <p>Readings Ignored: {readingsIgnored}</p>
-    </div>
-    */
-    
