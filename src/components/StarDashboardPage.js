@@ -6,6 +6,8 @@ import InputBase from '@material-ui/core/InputBase';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -16,6 +18,9 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
+      },
+      navlink: {
+          textDecoration: 'none'
       }
   }));
 
@@ -26,9 +31,10 @@ const StarDashboardPage = () => {
     return(
         <div>
             <div className={classes.links}>
-                <NavLink to="/create" activeClassName="is-active">
-                    <Fab variant="extended" color="primary" aria-label="add" className={classes.fab}>
-                        <AddIcon />  Add A Model
+                <NavLink to="/create" activeClassName="is-active" className={classes.navlink}>
+                    <Fab variant="extended" color="primary" aria-label="add">
+                        <AddIcon /> 
+                        <Typography> Add A Model</Typography>
                     </Fab>
                 </NavLink>
             </div>

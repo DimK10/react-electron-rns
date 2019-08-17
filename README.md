@@ -1,3 +1,11 @@
+To run setup and run:
+
+### git clone https://github.com/DimK10/react-electron-rns.git
+### cd react-electron-rns
+### yarn install
+### yarn run electron-dev
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
