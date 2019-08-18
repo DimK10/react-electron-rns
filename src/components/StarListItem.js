@@ -48,7 +48,24 @@ const StarListItem = (props) => {
             switch (props.star.model) {
                 case 'model':
                     return <Typography>Axes Ratio: {props.star.valueForSecondInput}</Typography>
-
+                case 'gmass':
+                    return <Typography>Gravitational Mass: {props.star.valueForSecondInput}</Typography>
+                case 'rmass':
+                    return <Typography>Rest Mass: {props.star.valueForSecondInput}</Typography>
+                case 'omega':
+                    return <Typography>Angular Velocity: {props.star.valueForSecondInput}</Typography>
+                case 'jmoment':
+                    return <Typography>Angular Momentum: {props.star.valueForSecondInput}</Typography>
+                case 'static':
+                    return undefined
+                case 'kepler':
+                    if(props.star.valueForSecondInput !== '') {
+                        //Tolerance value is set
+                        return <Typography>Tolerance: {props.star.valueForSecondInput}</Typography>
+                    }
+                    return undefined;
+                case 'test':
+                    return undefined;
                 default:
                     return undefined;
             }
@@ -79,11 +96,12 @@ const StarListItem = (props) => {
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.root}>
                         <Typography>Model: {props.star.model}</Typography>
-                        <Typography>Energy: {props.star.centralEnergyDensity}</Typography>
+                        <Typography>eos File Selected: {props.star.eosFile}</Typography>
+                        {props.star.model !== 'test' && <Typography>Energy: {props.star.centralEnergyDensity}</Typography>}
                         {renderSecondValueSwitch(props)}
                         {renderLimitSwitch(props)}
-                        {props.star.measurements !== 0 && <Typography>Individual Dots to measure: {props.star.measurements}</Typography>}
-                        <Typography>Readings Ignored: {props.star.readingsIgnored}</Typography>
+                        {props.star.measurements !== '0' && props.star.model !== 'test' && <Typography>Individual Dots to measure: {props.star.measurements}</Typography>}
+                        {props.star.readingsIgnored !== '0' && props.star.model !== 'test' && <Typography>Readings Ignored: {props.star.readingsIgnored}</Typography>}
                 </ExpansionPanelDetails>
                 </ExpansionPanel>
                 <div>

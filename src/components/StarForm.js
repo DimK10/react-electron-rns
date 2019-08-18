@@ -16,9 +16,9 @@ class StarForm extends React.Component {
         this.state = {
             starName: props.star ? props.star.starName : '',
             centralEnergyDensity: props.star ? props.star.centralEnergyDensity : '',
-            tolerance: props.star ? props.star.tolerance : '',
             labelForSecondInput: props.star ? props.star.labelForSecondInput : 'Axes Ratio',
             valueForSecondInput: props.star ? props.star.valueForSecondInput : '',
+            eosFile: props.star ? props.star.eosFile : 'eosC',
             model: props.star ? props.star.model : 'model',
             measurements: props.star ? props.star.measurements : '0',
             limit: props.star ? props.star.limit : 'none',
@@ -31,30 +31,33 @@ class StarForm extends React.Component {
     onSubmit = (e) => {
         e.preventDefault();
 
-        if (( !this.state.starName || !this.state.centralEnergyDensity || !this.state.valueForSecondInput) && (!this.state.model === 'test' || !this.state.starName)){
-            console.log('centralEnergyDensity', this.state.centralEnergyDensity);
-            console.log('valueForSecondInput', this.state.valueForSecondInput);
-            
+        
+        if(this.state.model === 'test' && !this.state.starName){
+            this.setState(() => ({ error: 'Please provide a name for the test model' }));
+        }else if (this.state.model !== 'test' && (!this.state.starName || !this.state.centralEnergyDensity || !this.state.valueForSecondInput)){
             this.setState(() => ({ error: `Please provide a name, a value for Energy and a value for ${this.state.labelForSecondInput} ` }));
-        } else {
-            console.log('centralEnergyDensity value', this.state.centralEnergyDensity);
-            console.log('second value', this.state.valueForSecondInput);
-
-            this.setState(() => ({ error: '' }))
+        }else if (this.state.model === 'test') {
+            this.setState(() => ({ error: '' }));
+            this.props.onSubmit({
+                starName: this.state.starName,
+                eosFile: this.state.eosFile,
+                model: this.state.model
+            });
+        }else {
+            this.setState(() => ({ error: '' }));
             this.props.onSubmit({
                 starName: this.state.starName,
                 centralEnergyDensity: this.state.centralEnergyDensity,
-                tolerance: this.state.tolerance,
                 labelForSecondInput: this.state.labelForSecondInput,
                 valueForSecondInput: this.state.valueForSecondInput,
+                eosFile: this.state.eosFile,
                 model: this.state.model,
-                measurements: this.state.measurements,
-                limit: this.state.limit,
-                limitValue: this.state.limitValue,
-                readingsIgnored: this.state.readingsIgnored
-
+                measurements: this.state.measurements === '' ? '0' : this.state.measurements,
+                limit: this.state.limit === '' ? '0' : this.state.limit,
+                limitValue: this.state.limitValue === '' ? '0' : this.state.limitValue,
+                readingsIgnored: this.state.readingsIgnored  === '' ? '0' : this.state.readingsIgnored
             });
-        }
+        };
     };
 
     onstarNameChange = (e) => {
@@ -106,7 +109,7 @@ class StarForm extends React.Component {
                 this.setState((prevState) => ({ 
                     model: 'kepler', 
                     labelForSecondInput: 'Tolerance',
-                    valueForSecondInput: prevState.tolerance 
+                    valueForSecondInput: prevState.valueForSecondInput 
                 }));
                 break;
             case 'test':
@@ -168,6 +171,11 @@ class StarForm extends React.Component {
         this.setState(() => ({ readingsIgnored }))
     };
 
+    handleEosFIleSelectChange = (e) => {
+        const eosFile = e.target.value;    
+        this.setState(() => ({ eosFile }));
+    }; 
+
     render() {
         if(this.props.star){
             console.log('props.star', this.props.star);
@@ -186,6 +194,33 @@ class StarForm extends React.Component {
                         value={this.state.starName}
                         onChange={this.onstarNameChange}
                     />
+                    {
+                        this.state.model !== 'test'
+                        &&
+                        <div className = "wrapper1">
+                            <InputLabel>Choose EOS file</InputLabel>
+                            <Select
+                                value={this.state.eosFile}
+                                onChange={this.handleEosFIleSelectChange}
+                            >     
+                                <MenuItem value="eosA">eosA</MenuItem>
+                                <MenuItem value="eosAU">eosAU</MenuItem>
+                                <MenuItem value="eosB">eosB</MenuItem>
+                                <MenuItem value="eosC">eosC</MenuItem>
+                                <MenuItem value="eosF">eosF</MenuItem>
+                                <MenuItem value="eosFP">eosFP</MenuItem>
+                                <MenuItem value="eosFPS">eosFPS</MenuItem>
+                                <MenuItem value="eosG">eosG</MenuItem>
+                                <MenuItem value="eosL">eosL</MenuItem>
+                                <MenuItem value="eosN">eosN</MenuItem>
+                                <MenuItem value="eosNV">eosNV</MenuItem>
+                                <MenuItem value="eosO">eosO</MenuItem>
+                                <MenuItem value="eosUU">eosUU</MenuItem>
+                                <MenuItem value="eosWNV">eosWNV</MenuItem>
+                                <MenuItem value="eosWS">eosWS</MenuItem>
+                            </Select> 
+                        </div>    
+                    }
                     <InputLabel htmlFor="age-helper">Model Type</InputLabel>
                     <Select
                         value={this.state.model}
@@ -201,42 +236,56 @@ class StarForm extends React.Component {
                         <MenuItem value="kepler">kepler</MenuItem>
                         <MenuItem value="test">test</MenuItem>
                     </Select>
+                    {
+                        this.state.model !== 'test' 
+                        &&
+                        <TextField
+                            id="standard-with-placeholder"
+                            label="Energy Value"
+                            placeholder="0"
+                            margin="normal"
+                            value={this.state.centralEnergyDensity}
+                            onChange={this.onEnergyChange}
+                        />
+                    }
+                    {
+                        this.state.model !== 'test'
+                        &&
+                        this.state.model !== 'static'
+                        &&
+                        <TextField
+                            id="standard-with-placeholder"
+                            label={this.state.labelForSecondInput}
+                            placeholder="0" 
+                            margin="normal"
+                            value={this.state.valueForSecondInput} 
+                            onChange={this.onSecondInputChange}
+                        />
+                    }
+                    {
+                        this.state.model !== 'test'
+                        &&
+                        <div className="wrapper2">
+                            <InputLabel htmlFor="age-helper">Select Limit</InputLabel>
+                            <Select
+                                value={this.state.limit}
+                                onChange={this.handleLimitSelectChange}
+                                
+                            >
+                                
+                                <MenuItem value="none">No Limit Set</MenuItem>
+                                <MenuItem value="limitEnergy">Set Limit on Energy</MenuItem>
+                                {this.state.model !== 'static' && <MenuItem value="limitSecondValue">Set Limit on {this.state.labelForSecondInput}</MenuItem>}                           
+                            </Select>
+                        </div>
+                    }
 
-                    <TextField
-                        id="standard-with-placeholder"
-                        disabled={this.state.model === 'test'}
-                        label="Energy Value"
-                        placeholder="0"
-                        margin="normal"
-                        value={this.state.centralEnergyDensity}
-                        onChange={this.onEnergyChange}
-                    />
-                    <TextField
-                        id="standard-with-placeholder"
-                        disabled={this.state.model === 'test' || this.state.model === 'static'}
-                        label={this.state.labelForSecondInput}
-                        placeholder="0" 
-                        margin="normal"
-                        value={this.state.valueForSecondInput} 
-                        onChange={this.onSecondInputChange}
-                    />
-
-                    <InputLabel htmlFor="age-helper">Select Limit</InputLabel>
-                    <Select
-                        value={this.state.limit}
-                        disabled={this.state.model === 'test'}
-                        onChange={this.handleLimitSelectChange}
-                        
-                    >
-                        
-                        <MenuItem value="none">No Limit Set</MenuItem>
-                        <MenuItem value="limitEnergy">Set Limit on Energy</MenuItem>
-                        <MenuItem value="limitSecondValue">Set Limit on {this.state.labelForSecondInput}</MenuItem>
-                       
-                    </Select>
+                    
 
                     {
-                        this.state.limit !== 'none' 
+                        this.state.limit !== 'none'
+                        &&
+                        this.state.test !== 'test' 
                         && 
                         <TextField
                             id="standard-with-placeholder"
@@ -249,27 +298,31 @@ class StarForm extends React.Component {
                         />
                         
                     }
-
-                    <TextField
-                        id="standard-with-placeholder"
-                        disabled={this.state.model === 'test'}
-                        label="Measurements"
-                        placeholder="0"
-                        margin="normal"
-                        value={this.state.measurements === '0' ? '' : this.state.measurements}
-                        onChange={this.onNumberOfMeasurementsChange}
-                    />
-                    <TextField
-                        id="standard-with-placeholder"
-                        disabled={this.state.model === 'test'}
-                        label="Readings to Ignore"
-                        placeholder="0"
-                        margin="normal"
-                        value={this.state.readingsIgnored === '0' ? '' : this.state.readingsIgnored}
-                        onChange={this.onReadingsIgnoredChange}
-                    />
-                   
-                    
+                    {
+                        this.state.model !== 'test'
+                        &&
+                        <TextField
+                            id="standard-with-placeholder"
+                            label="Measurements"
+                            placeholder="0"
+                            margin="normal"
+                            value={this.state.measurements === '0' ? '' : this.state.measurements}
+                            onChange={this.onNumberOfMeasurementsChange}
+                        />
+                    }
+                    {
+                        this.state.model !== 'test'
+                        &&
+                        <TextField
+                            id="standard-with-placeholder"
+                            disabled={this.state.model === 'test'}
+                            label="Readings to Ignore"
+                            placeholder="0"
+                            margin="normal"
+                            value={this.state.readingsIgnored === '0' ? '' : this.state.readingsIgnored}
+                            onChange={this.onReadingsIgnoredChange}
+                        />
+                    }
                     <Button type="submit" variant="contained" color="secondary">
                         {this.props.onEdit ? 'Edit Star' : 'Add Star'}
                     </Button>

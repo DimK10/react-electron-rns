@@ -8,6 +8,7 @@ export const addStar = (
       tolerance = 0,
       labelForSecondInput = '',
       valueForSecondInput = 0,
+      eosFile = 'eosC',
       model = 'model',
       measurements = 'measurements',
       limit = 'none',
@@ -23,11 +24,11 @@ export const addStar = (
       tolerance,
       labelForSecondInput,
       valueForSecondInput,
+      eosFile,
       model,
       measurements,
       limit,
       limitValue,
-      readingsIgnored,
       readingsIgnored
     }
   });
