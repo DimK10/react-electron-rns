@@ -45,31 +45,6 @@ export const editStar = (id, updates) => ({
     updates
 });
 
-const handleResponse =(response) => {
-  if(response.ok) {
-    return response.json()
-  }else {
-    let error = new Error(response.statusText)
-    error.response = response
-    throw error
-  }
-}
-
-// export const saveDataToDb = (data) => {
-//   const newData = JSON.stringify(data)
-//   console.log(newData);
-//   return fetch('/stars', {
-//     method: 'POST',
-//     mode: 'cors',
-//     body: JSON.stringify(data),
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Access-Control-Allow-Origin':'*'
-//     }
-//   }).then(handleResponse)
-
-// }
-
 export const getEosFiles = () => {
     return axios.get('http://localhost:5000/eos')
     .then((res) => {

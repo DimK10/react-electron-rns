@@ -6,7 +6,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Input from '@material-ui/core/Input';
 import { connect } from 'react-redux';
 import { removeStar } from '../actions/stars';
 import { getEosFiles } from '../actions/stars';
