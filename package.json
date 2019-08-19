@@ -13,12 +13,14 @@
     "appId": "com.my-website.my-app",
     "productName": "MyApp",
     "copyright": "Copyright © 2019 ${author}",
-    "mac": {
-      "category": "public.app-category.utilities"
+    "linux": {
+      "category": "public.app-category.scince"
     },
     "files": [
       "build/**/*",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "server/**/*",
+      "public/eos-files/**/*"
     ],
     "directories": {
       "buildResources": "assets"
@@ -44,10 +46,10 @@
     "build": "rescripts build",
     "test": "rescripts test",
     "eject": "react-scripts eject",
-    "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\" \"nodemon public/server/server.js\"",
+    "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\" \"nodemon server/server.js\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn build",
-    "electron-pack": "build -mw"
+    "electron-pack": "electron-builder -wl"
   },
   "eslintConfig": {
     "extends": "react-app"
