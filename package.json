@@ -27,7 +27,9 @@
   "dependencies": {
     "@material-ui/core": "^4.3.1",
     "@material-ui/icons": "^4.2.1",
+    "axios": "^0.19.0",
     "electron-is-dev": "^1.0.1",
+    "nodemon": "^1.19.1",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-redux": "^7.1.0",
@@ -42,7 +44,7 @@
     "build": "rescripts build",
     "test": "rescripts test",
     "eject": "react-scripts eject",
-    "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\" \"nodemon public/server/server.js\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn build",
     "electron-pack": "build -mw"
@@ -60,6 +62,7 @@
     "@rescripts/cli": "^0.0.10",
     "@rescripts/rescript-env": "^0.0.5",
     "concurrently": "^4.1.0",
+    "cors": "^2.8.5",
     "electron": "^4.0.6",
     "electron-builder": "^20.38.5",
     "typescript": "^3.3.3333",

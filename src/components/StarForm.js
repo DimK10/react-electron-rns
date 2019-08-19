@@ -6,11 +6,15 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Input from '@material-ui/core/Input';
 import { connect } from 'react-redux';
 import { removeStar } from '../actions/stars';
+import { getEosFiles } from '../actions/stars';
 
 
 class StarForm extends React.Component {
+    _isMounted = false;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -18,6 +22,7 @@ class StarForm extends React.Component {
             centralEnergyDensity: props.star ? props.star.centralEnergyDensity : '',
             labelForSecondInput: props.star ? props.star.labelForSecondInput : 'Axes Ratio',
             valueForSecondInput: props.star ? props.star.valueForSecondInput : '',
+            eosFiles: [],
             eosFile: props.star ? props.star.eosFile : 'eosC',
             model: props.star ? props.star.model : 'model',
             measurements: props.star ? props.star.measurements : '0',
@@ -27,6 +32,31 @@ class StarForm extends React.Component {
             error: ''
         }
     };
+
+    componentDidMount() {
+        this._isMounted = true;
+
+        getEosFiles()
+        .then((eosFiles) => {
+            if(this._isMounted){
+                console.log(eosFiles[0]);
+                this.setState(() => ({ eosFiles }));
+            }
+        });
+    }
+
+    componentDidUpdate() {
+        getEosFiles()
+        .then((eosFiles) => {
+            if(this._isMounted){
+                this.setState(() => ({ eosFiles }));
+            }
+        });
+    }
+
+    componentWillUnmount(){
+        this._isMounted = false;
+    }
    
     onSubmit = (e) => {
         e.preventDefault();
@@ -177,11 +207,6 @@ class StarForm extends React.Component {
     }; 
 
     render() {
-        if(this.props.star){
-            console.log('props.star', this.props.star);
-            
-        }
-        
         return (
             <div>
                 {this.state.error && <Typography color="error" variant="subtitle2">{this.state.error}</Typography>}
@@ -200,28 +225,19 @@ class StarForm extends React.Component {
                         <div className = "wrapper1">
                             <InputLabel>Choose EOS file</InputLabel>
                             <Select
+                                disabled={this.state.eosFiles[0] == 'No eos files in folder!'}
                                 value={this.state.eosFile}
                                 onChange={this.handleEosFIleSelectChange}
                             >     
-                                <MenuItem value="eosA">eosA</MenuItem>
-                                <MenuItem value="eosAU">eosAU</MenuItem>
-                                <MenuItem value="eosB">eosB</MenuItem>
-                                <MenuItem value="eosC">eosC</MenuItem>
-                                <MenuItem value="eosF">eosF</MenuItem>
-                                <MenuItem value="eosFP">eosFP</MenuItem>
-                                <MenuItem value="eosFPS">eosFPS</MenuItem>
-                                <MenuItem value="eosG">eosG</MenuItem>
-                                <MenuItem value="eosL">eosL</MenuItem>
-                                <MenuItem value="eosN">eosN</MenuItem>
-                                <MenuItem value="eosNV">eosNV</MenuItem>
-                                <MenuItem value="eosO">eosO</MenuItem>
-                                <MenuItem value="eosUU">eosUU</MenuItem>
-                                <MenuItem value="eosWNV">eosWNV</MenuItem>
-                                <MenuItem value="eosWS">eosWS</MenuItem>
+                                {
+                                    this.state.eosFiles.map((eosFileName) => {
+                                        return <MenuItem key={eosFileName} value={eosFileName}>{eosFileName}</MenuItem>
+                                    }) 
+                                }
                             </Select> 
                         </div>    
                     }
-                    <InputLabel htmlFor="age-helper">Model Type</InputLabel>
+                    <InputLabel>Model Type</InputLabel>
                     <Select
                         value={this.state.model}
                         onChange={this.handleModelSelectChange}

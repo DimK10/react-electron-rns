@@ -1,4 +1,5 @@
 import uuid from 'uuid';
+import axios from 'axios';
 
 // ADD_STAR
 export const addStar = (
@@ -69,3 +70,14 @@ const handleResponse =(response) => {
 
 // }
 
+export const getEosFiles = () => {
+    return axios.get('http://localhost:5000/eos')
+    .then((res) => {
+        return (res.data);               
+    })
+    .catch((err) => {
+        // console.log(err);
+        return err.data;
+        
+    })
+};
