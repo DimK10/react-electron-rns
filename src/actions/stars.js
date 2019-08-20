@@ -46,7 +46,7 @@ export const editStar = (id, updates) => ({
 });
 
 export const getEosFiles = () => {
-    return axios.get('http://localhost:5000/eos')
+    return axios.get('http://localhost:4000/eos')
     .then((res) => {
         return (res.data);               
     })

@@ -19,8 +19,16 @@
     "files": [
       "build/**/*",
       "node_modules/**/*",
-      "server/**/*",
-      "public/eos-files/**/*"
+      "server/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "./public/eos-files/",
+        "to": "eos-files",
+        "filter": [
+          "**/*"
+        ]
+      }
     ],
     "directories": {
       "buildResources": "assets"
@@ -47,9 +55,10 @@
     "test": "rescripts test",
     "eject": "react-scripts eject",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\" \"nodemon server/server.js\"",
+    "electron-prod": "electron .",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn build",
-    "electron-pack": "electron-builder -wl"
+    "electron-pack": "electron-builder -l"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -67,6 +76,7 @@
     "cors": "^2.8.5",
     "electron": "^4.0.6",
     "electron-builder": "^20.38.5",
+    "electron-packager": "^14.0.4",
     "typescript": "^3.3.3333",
     "wait-on": "^3.2.0"
   }
