@@ -14,7 +14,7 @@
     "productName": "MyApp",
     "copyright": "Copyright © 2019 ${author}",
     "linux": {
-      "category": "public.app-category.scince"
+      "category": "public.app-category.science"
     },
     "files": [
       "build/**/*",
@@ -23,8 +23,15 @@
     ],
     "extraResources": [
       {
-        "from": "./public/eos-files/",
+        "from": "./resources/eos-files",
         "to": "eos-files",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "./resources/engine",
+        "to": "engine",
         "filter": [
           "**/*"
         ]
