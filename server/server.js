@@ -3,6 +3,7 @@ const express = require('express');
 const publicPath = path.join(__dirname, '..','build');
 const fs = require('fs');
 const port = process.env.PORT || 4000;
+const bodyParser = require('body-parser');
 // const isDev = false; //Testing purposes
 
 
@@ -17,17 +18,18 @@ const expressServer = (isDev) => {
         const cors = require('cors');
         const whitelist = 'http://localhost:3000'
   
-        const corsOptions = {
-            origin:  (origin, callback) => {
-            if (whitelist.indexOf(origin) !== -1) {
-                callback(null, true)
-            } else {
-            callback(new Error('Not allowed by CORS'))
-            };
-        }
-      };
+    //     const corsOptions = {
+    //         origin:  (origin, callback) => {
+    //         if (whitelist.indexOf(origin) !== -1) {
+    //             callback(null, true)
+    //         } else {
+    //         callback(new Error('Not allowed by CORS'))
+    //         };
+    //     }
+    //   };
   
-      app.use(cors(corsOptions));
+      app.use(cors());
+      
   
       app.get('/', function (req, res) {
           res.send('Set up')
@@ -39,7 +41,12 @@ const expressServer = (isDev) => {
             res.sendFile(path.join(publicPath, 'index.html'));
         });
     }
-  
+    
+    app.use(bodyParser.urlencoded({
+        extended: true
+      }));
+
+    app.use(bodyParser.json());
 
     app.get('/eos', (req, res) => {
         // const eosPath = path.join(__dirname, '..', 'public', 'eos-files');
@@ -56,6 +63,15 @@ const expressServer = (isDev) => {
                 }
             }
         });
+    });
+
+    app.post('/stars', (req, res) => {
+        console.log('req.body', req.body);
+        // if(req !== {}){
+        //     res.status(200).send('Star Models reseived. Models:', req.body);
+        // } else {
+        //     res.status(400).send('Not received');
+        // }
     });
 
       app.listen(port, () => {

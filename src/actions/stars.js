@@ -51,6 +51,16 @@ export const getEosFiles = () => {
     .catch((err) => {
         // console.log(err);
         return err.data;
-        
     })
+};
+
+export const sendModelsData = (starModels) => {
+  console.log('starModels:', starModels);
+  return axios.post('http://localhost:4000/stars', starModels)
+  .then((res) => {
+    return(res.status);
+  })
+  .catch((err) => {
+    return err.data;
+  })
 };

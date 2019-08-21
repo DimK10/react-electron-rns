@@ -366,9 +366,6 @@ class StarForm extends React.Component {
                     <Button type="submit" variant="contained" color="secondary">
                         {this.props.onEdit ? 'Edit Star' : 'Add Star'}
                     </Button>
-                    <Button variant="contained" onClick={this.onClickBack}>
-                        Back
-                    </Button>
                     {
                         !this.props.onEdit
                         ? undefined
@@ -376,6 +373,9 @@ class StarForm extends React.Component {
                                 Remove Model
                             </Button>
                     }
+                    <Button variant="contained" onClick={this.onClickBack}>
+                        Back
+                    </Button>
                 </form>
             </div>
         )
