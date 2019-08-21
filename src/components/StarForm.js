@@ -6,6 +6,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import { connect } from 'react-redux';
 import { removeStar } from '../actions/stars';
 import { getEosFiles } from '../actions/stars';
@@ -27,7 +29,7 @@ class StarForm extends React.Component {
             measurements: props.star ? props.star.measurements : '0',
             limit: props.star ? props.star.limit : 'none',
             limitValue: props.star ? props.star.limitValue : '0',
-            readingsIgnored: props.star ? props.star.readingsIgnored : '0',
+            readingsIgnored: props.star ? props.star.readingsIgnored : false,
             error: ''
         }
     };
@@ -60,10 +62,11 @@ class StarForm extends React.Component {
     onSubmit = (e) => {
         e.preventDefault();
 
-        
         if(this.state.model === 'test' && !this.state.starName){
             this.setState(() => ({ error: 'Please provide a name for the test model' }));
-        }else if (this.state.model !== 'test' && (!this.state.starName || !this.state.centralEnergyDensity || !this.state.valueForSecondInput)){
+        }else if(this.state.model === 'kepler' && (!this.state.starName || !this.state.centralEnergyDensity)){
+            this.setState(() => ({ error: 'Please provide a name, and a value for central Energy Density.' }));
+        }else if (this.state.model !== 'test' && this.state.model !== 'kepler' && (!this.state.starName || !this.state.centralEnergyDensity || !this.state.valueForSecondInput)){
             this.setState(() => ({ error: `Please provide a name, a value for Energy and a value for ${this.state.labelForSecondInput} ` }));
         }else if (this.state.model === 'test') {
             this.setState(() => ({ error: '' }));
@@ -84,7 +87,7 @@ class StarForm extends React.Component {
                 measurements: this.state.measurements === '' ? '0' : this.state.measurements,
                 limit: this.state.limit === '' ? '0' : this.state.limit,
                 limitValue: this.state.limitValue === '' ? '0' : this.state.limitValue,
-                readingsIgnored: this.state.readingsIgnored  === '' ? '0' : this.state.readingsIgnored
+                readingsIgnored: this.state.readingsIgnored
             });
         };
     };
@@ -190,7 +193,7 @@ class StarForm extends React.Component {
         this.setState(() => ({ limitValue }));
     };
 
-    onNumberOfMeasurementsChange = (e) => {
+        onNumberOfMeasurementsChange = (e) => {
         const measurements = e.target.value;
         this.setState(() => ({ measurements }));
     };
@@ -205,6 +208,10 @@ class StarForm extends React.Component {
         this.setState(() => ({ eosFile }));
     }; 
 
+    handleReadingsChange = () => {
+        this.setState((prevState) => ({ readingsIgnored: !prevState.readingsIgnored }));
+    }
+
     render() {
         return (
             <div>
@@ -218,24 +225,22 @@ class StarForm extends React.Component {
                         value={this.state.starName}
                         onChange={this.onstarNameChange}
                     />
-                    {
-                        this.state.model !== 'test'
-                        &&
-                        <div className = "wrapper1">
-                            <InputLabel>Choose EOS file</InputLabel>
-                            <Select
-                                disabled={this.state.eosFiles[0] == 'No eos files in folder!'}
-                                value={this.state.eosFile}
-                                onChange={this.handleEosFIleSelectChange}
-                            >     
-                                {
-                                    this.state.eosFiles.map((eosFileName) => {
-                                        return <MenuItem key={eosFileName} value={eosFileName}>{eosFileName}</MenuItem>
-                                    }) 
-                                }
-                            </Select> 
-                        </div>    
-                    }
+                    
+                    <div className = "wrapper1">
+                        <InputLabel>Choose EOS file</InputLabel>
+                        <Select
+                            disabled={this.state.eosFiles[0] == 'No eos files in folder!'}
+                            value={this.state.eosFile}
+                            onChange={this.handleEosFIleSelectChange}
+                        >     
+                            {
+                                this.state.eosFiles.map((eosFileName) => {
+                                    return <MenuItem key={eosFileName} value={eosFileName}>{eosFileName}</MenuItem>
+                                }) 
+                            }
+                        </Select> 
+                    </div>    
+                    
                     <InputLabel>Model Type</InputLabel>
                     <Select
                         value={this.state.model}
@@ -268,10 +273,25 @@ class StarForm extends React.Component {
                         &&
                         this.state.model !== 'static'
                         &&
+                        this.state.model !== 'kepler'
+                        &&
                         <TextField
                             id="standard-with-placeholder"
                             label={this.state.labelForSecondInput}
                             placeholder="0" 
+                            margin="normal"
+                            value={this.state.valueForSecondInput} 
+                            onChange={this.onSecondInputChange}
+                        />
+                    }
+                    {
+                        /*Case needed for tolerance in kepler model*/
+                        this.state.model === 'kepler'
+                        &&
+                        <TextField
+                            id="standard-with-placeholder"
+                            label={this.state.labelForSecondInput + '-Not Required.'}
+                            placeholder="10e-4" 
                             margin="normal"
                             value={this.state.valueForSecondInput} 
                             onChange={this.onSecondInputChange}
@@ -314,7 +334,11 @@ class StarForm extends React.Component {
                         
                     }
                     {
-                        this.state.model !== 'test'
+                        (
+                            this.state.model !== 'test'
+                            && 
+                            this.state.limit !== 'none'
+                        )
                         &&
                         <TextField
                             id="standard-with-placeholder"
@@ -328,15 +352,16 @@ class StarForm extends React.Component {
                     {
                         this.state.model !== 'test'
                         &&
-                        <TextField
-                            id="standard-with-placeholder"
-                            disabled={this.state.model === 'test'}
-                            label="Readings to Ignore"
-                            placeholder="0"
-                            margin="normal"
-                            value={this.state.readingsIgnored === '0' ? '' : this.state.readingsIgnored}
-                            onChange={this.onReadingsIgnoredChange}
-                        />
+                        <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={this.state.readingsIgnored}
+                            onChange={this.handleReadingsChange}
+                            color="primary"
+                          />
+                        }
+                        label="Suppress the relative difference in the coordinate equatorial radius from one iteration to the next?"
+                      />
                     }
                     <Button type="submit" variant="contained" color="secondary">
                         {this.props.onEdit ? 'Edit Star' : 'Add Star'}

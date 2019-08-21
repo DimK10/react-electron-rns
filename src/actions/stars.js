@@ -5,16 +5,15 @@ import axios from 'axios';
 export const addStar = (
     {
       starName = 'Uknown Star',
-      centralEnergyDensity = 0,
-      tolerance = 0,
+      centralEnergyDensity = '0',
       labelForSecondInput = '',
-      valueForSecondInput = 0,
+      valueForSecondInput = '0',
       eosFile = 'eosC',
       model = 'model',
-      measurements = 'measurements',
+      measurements = '0',
       limit = 'none',
-      limitValue = 0,
-      readingsIgnored = 0
+      limitValue = '0',
+      readingsIgnored = false
     } = {}
   ) => ({
     type: 'ADD_STAR',
@@ -22,7 +21,6 @@ export const addStar = (
       id: uuid(),
       starName,
       centralEnergyDensity,
-      tolerance,
       labelForSecondInput,
       valueForSecondInput,
       eosFile,
