@@ -4,6 +4,7 @@ const publicPath = path.join(__dirname, '..','build');
 const fs = require('fs');
 const port = process.env.PORT || 4000;
 const bodyParser = require('body-parser');
+const connectToEngine = require('./utils/connectToEngine');
 // const isDev = false; //Testing purposes
 
 
@@ -67,6 +68,14 @@ const expressServer = (isDev) => {
 
     app.post('/stars', (req, res) => {
         console.log('req.body', req.body);
+        const starModels = req.body;
+
+        if(starModels.length == 0){
+            console.log('No stars passed -- Shouldn\'t happen');  
+        }else {
+            connectToEngine(starModels);
+            
+        }
         // if(req !== {}){
         //     res.status(200).send('Star Models reseived. Models:', req.body);
         // } else {
