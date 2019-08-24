@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 const expressServer = (isDev) => {
 
     // const eosPathBuild = path.join(__dirname, '../../eos-files'); This is the right one for production 
-    const eosPath = isDev ? path.join(__dirname, '..', 'public', 'eos-files') : path.join(__dirname, '../../eos-files');
+    const eosPath = isDev ? path.join(__dirname, '..', 'resources', 'eos-files') : path.join(__dirname, '../../eos-files');
 
     const app = express();
 
