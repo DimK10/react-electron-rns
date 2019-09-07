@@ -8,6 +8,10 @@ const connectToEngine = (starModels) => {
     console.log('Os running this app:', os);
 
     let cmd = '';
+
+    //Counters for succeded cmds and failed
+    let succeded = 0;
+    let failed = 0;
   
 
 
@@ -51,18 +55,50 @@ const connectToEngine = (starModels) => {
                         break;
                 }
                 let t0 = performance.now();
-                let child = exec(cmd, {maxBuffer: 102400 * 1024}, (err, stdout, stderr) => {
-                    if(err){
-                        console.log('error:', err);
-                        return;
-                    } else {
-                        console.log('output:', stdout);
-                        console.log('std error:', stderr);
-                        let t1 = performance.now();
-                        console.log(`execution time: ${t1 - t0} ms`);
-                        child.kill();
-                    };
-                });
+                // let child = exec(cmd, {maxBuffer: 102400 * 1024, timeout: 240000}, (err, stdout, stderr) => {
+                //     if(err){
+                //         console.log('error:', err);
+                //         return;
+                //     } else {
+                //         console.log('output:', stdout);
+                //         console.log('std error:', stderr);
+                //         let t1 = performance.now();
+                //         let executionTime = ((t1.toFixed(2) - t0.toFixed(2)) / 1000 / 60).toFixed(2); //In minutes
+                //         console.log(`execution time: ${executionTime}  s`);
+                //         child.kill();
+                //     };
+                // });
+
+                const execShellCommand = (cmd) => {
+                    const exec = require('child_process').exec;
+                    return new Promise((resolve, reject) => {
+                        exec(cmd, {maxBuffer: 102400 * 1024, timeout: 240000}, (error, stdout, stderr) => {
+                            if (error) {
+                                console.warn(error);
+                            reject(error);
+                            }
+                            if(stdout){
+                                let t1 = performance.now();
+                                let executionTime = ((t1.toFixed(2) - t0.toFixed(2)) / 1000 / 60).toFixed(2); //In minutes
+                                console.log(`execution time: ${executionTime}  m`);
+                                resolve(stdout);
+                            }
+                            reject(stderr);
+                        });
+                    });
+                }
+
+                execShellCommand(cmd)
+                .then((output) => {
+                    console.log(output);
+                    succeded += 1;
+                    console.log('succeded:', succeded);  
+                })
+                .catch((error) => {
+                    console.log('error:', error);
+                    failed += 1;
+                    console.log('failed:', failed);  
+                })
                 
                 
                  
