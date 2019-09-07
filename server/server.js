@@ -71,8 +71,10 @@ const expressServer = (isDev) => {
         const starModels = req.body;
 
         if(starModels.length == 0){
-            console.log('No stars passed -- Shouldn\'t happen');  
+            console.log('No stars passed -- Shouldn\'t happen'); 
+            res.status(404).send('No data sent -- logic error on button showing?'); 
         }else {
+            res.status(200).send('Data received');
             connectToEngine(starModels);
             
         }

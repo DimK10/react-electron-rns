@@ -1,5 +1,6 @@
 const path = require('path');
 const { exec } = require('child_process');
+const { performance } = require('perf_hooks');
 
 
 const connectToEngine = (starModels) => {
@@ -49,15 +50,21 @@ const connectToEngine = (starModels) => {
                     default:
                         break;
                 }
-                exec(cmd, (err, stdout, stderr) => {
+                let t0 = performance.now();
+                let child = exec(cmd, {maxBuffer: 102400 * 1024}, (err, stdout, stderr) => {
                     if(err){
                         console.log('error:', err);
                         return;
                     } else {
                         console.log('output:', stdout);
                         console.log('std error:', stderr);
+                        let t1 = performance.now();
+                        console.log(`execution time: ${t1 - t0} ms`);
+                        child.kill();
                     };
                 });
+                
+                
                  
 
             }else if (starModels.length > 1){

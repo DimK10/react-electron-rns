@@ -20,9 +20,9 @@ class StarForm extends React.Component {
         super(props);
         this.state = {
             starName: props.star ? props.star.starName : '',
-            centralEnergyDensity: props.star ? props.star.centralEnergyDensity : '',
+            centralEnergyDensity: props.star ? props.star.centralEnergyDensity : '0',
             labelForSecondInput: props.star ? props.star.labelForSecondInput : 'Axes Ratio',
-            valueForSecondInput: props.star ? props.star.valueForSecondInput : '',
+            valueForSecondInput: props.star ? props.star.valueForSecondInput : '0',
             eosFiles: [],
             eosFile: props.star ? props.star.eosFile : 'eosC',
             model: props.star ? props.star.model : 'model',
@@ -179,12 +179,17 @@ class StarForm extends React.Component {
 
     onEnergyChange = (e) => {
         const centralEnergyDensity = e.target.value;
-        this.setState(() => ({ centralEnergyDensity }));
+
+       
+            this.setState(() => ({ centralEnergyDensity }));
+       
     };
 
     onSecondInputChange = (e) => {
         const valueForSecondInput = e.target.value;
-        this.setState(() => ({ valueForSecondInput }));
+
+            this.setState(() => ({ valueForSecondInput }));
+       
     };
 
     onLimitChange = (e) => {
@@ -277,10 +282,11 @@ class StarForm extends React.Component {
                         &&
                         <TextField
                             id="standard-with-placeholder"
+                            error={!this.state.valueForSecondInput.match(/^[+-]?\d+(?:\.\d*(?:[eE][+-]?\d+)?)?$/)}
                             label={this.state.labelForSecondInput}
-                            placeholder="0" 
+                            placeholder="ex. 2e14" 
                             margin="normal"
-                            value={this.state.valueForSecondInput} 
+                            value={this.state.valueForSecondInput === '0' ? '' : this.state.valueForSecondInput} 
                             onChange={this.onSecondInputChange}
                         />
                     }

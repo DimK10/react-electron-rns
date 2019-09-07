@@ -58,9 +58,17 @@ export const sendModelsData = (starModels) => {
   console.log('starModels:', starModels);
   return axios.post('http://localhost:4000/stars', starModels)
   .then((res) => {
+    console.log('Success');
+    console.log(res.data);
+    console.log(res.status);
+    console.log(res.statusText);
     return(res.status);
   })
   .catch((err) => {
+    console.log('Error');
+    console.log(err.data);
+    console.log(err.status);
+    console.log(err.statusText);
     return err.data;
   })
 };
