@@ -84,16 +84,6 @@ async function connectToEngine(starModel) {
 
 
         exec(cmd, {maxBuffer: 102400 * 1024, timeout: 120000}, (error, stdout, stderr) => {
-            if (error) {
-                // console.warn(error);
-                failed += 1;
-            reject(new Error('0'));
-            }
-            if(error.signal === 'SIGTERM'){
-                console.log('Entered if for sigterm');
-                reject({ reason: error.signal });
-                
-            }
             if(stdout && !error.signal){
                 console.log('stdout:', stdout);
                 
@@ -103,8 +93,20 @@ async function connectToEngine(starModel) {
                 succeded += 1;
                 resolve(stdout);
             }
-            failed += 1;
-            reject(new Error('0'));
+
+           
+            if(error.signal === 'SIGTERM'){
+                console.log('Entered if for sigterm');
+                reject({ reason: error.signal });
+                
+            }
+            if (error) {
+                // console.warn(error);
+                
+            reject({ reason: error });
+            }
+           
+            reject({ reason: error });
         });
     });
 };

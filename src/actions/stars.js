@@ -66,9 +66,11 @@ export const sendModelsData = (starModels) => {
   })
   .catch((err) => {
     console.log('Error');
+    console.log('Error response:', err.response);
+    
     console.log(err.data);
     console.log(err.status);
     console.log(err.statusText);
-    return err.data;
+    return (err.response);
   })
 };

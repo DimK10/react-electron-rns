@@ -108,8 +108,8 @@ const expressServer = (isDev) => {
             })
             .catch((err) => {
                 console.log('error in promise all:', err);
-                
-                res.status(500).send(err.reason);
+                //Program reaches here but its not sending reponse back to server???
+                res.status(400).send(err);
             });
         }
 
