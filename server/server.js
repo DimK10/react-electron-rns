@@ -69,82 +69,48 @@ const expressServer = (isDev) => {
     });
 
     app.post('/stars', (req, res) => {
-        console.log('req.body', req.body);
+        // console.log('req.body', req.body);
         const starModels = req.body;
 
         if(starModels.length == 0){
             console.log('No stars passed -- Shouldn\'t happen'); 
             res.status(404).send('No data sent -- logic error on button showing?'); 
         }else {
-            // res.status(200).send('Data received');
-            // starModels.forEach((star) => {
-            //     const [succeded, failed] = connectToEngine(star);
-            //     succededModels += succeded;
-            //     failedModels += failed;
-            // });
-            // res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}`);
             let promiseArr = [];
             starModels.forEach((star) => {
-                const data = connectToEngine(star)
-                .then((output) => {
-                    console.log(output);
-                    return {number: 1};  
-                })
-                .catch((error) => {
-                    console.log('error:', error);
-                    return {number: 0};  
-                });
-
+                const data = connectToEngine(star);
                 promiseArr.push(data);
             }); 
             
-
-
-            // console.log('promiseArr before forEach:', promiseArr);
-            
-
+            let num = 0;
             Promise.all(promiseArr)
-            .then((res) => {
-                console.log('promiseArr:', promiseArr);
+            .then((promisesResult) => {
+                console.log('res', promisesResult);
+
+                promisesResult.forEach((singleResult) =>{
+                    if(singleResult.length > 1) {
+                        // Not rejected
+                        num++;
+                    }
+                });
                 
-
-                //now execute promise all
-                promiseArr.forEach((element) => {
-                    console.log('typeof element:', typeof element);
-                    
-                    console.log('element:', element);
-                    
-                    let num = 0;
-                    // for (let prop in element){
-                    //     num += element[prop];
-                    //     break;
-                    // };
-                    num = element[Object.keys(element)[0]];
-
-                    console.log('num:', num);
-                    
-
-                    // element = String(element);
-                    // console.log('typeof element:', typeof element);
-                    
-                    // console.log('element:', element);
-                    
-                    
-                    // console.log('element num:', element.toString().match(/\d+/));
-                    
-                    // let num = element.match(/\d+/);
-                    
-                    succededModels = succededModels + num;
-                })
+                succededModels += num;
 
                 failedModels = starModels.length - succededModels;
 
                 console.log('succededModels:', succededModels);
                 console.log('failedModels:', failedModels);
                 
-                res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}`
-                )})
-            .catch((err) => res.send(err));
+                res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}`);
+                //Reset
+                succededModels = 0;
+                failedModels = 0;
+            })
+            .catch((err) => {
+                console.log('error in promise all:', err);
+                
+                res.status(500).send(err.reason);
+            });
         }
 
 

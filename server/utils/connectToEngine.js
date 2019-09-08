@@ -17,7 +17,7 @@ async function connectToEngine(starModel) {
     const exec = require('child_process').exec;
 
     let t0 = performance.now();
-    
+
     return new Promise((resolve, reject) => {
         switch (os) {
             case 'win32':
@@ -83,13 +83,20 @@ async function connectToEngine(starModel) {
 
 
 
-        exec(cmd, {maxBuffer: 102400 * 1024, timeout: 240000}, (error, stdout, stderr) => {
+        exec(cmd, {maxBuffer: 102400 * 1024, timeout: 120000}, (error, stdout, stderr) => {
             if (error) {
-                console.warn(error);
+                // console.warn(error);
                 failed += 1;
-            reject(error);
+            reject(new Error('0'));
             }
-            if(stdout){
+            if(error.signal === 'SIGTERM'){
+                console.log('Entered if for sigterm');
+                reject({ reason: error.signal });
+                
+            }
+            if(stdout && !error.signal){
+                console.log('stdout:', stdout);
+                
                 let t1 = performance.now();
                 let executionTime = ((t1.toFixed(2) - t0.toFixed(2)) / 1000 / 60).toFixed(2); //In minutes
                 console.log(`execution time: ${executionTime}  m`);
@@ -97,7 +104,7 @@ async function connectToEngine(starModel) {
                 resolve(stdout);
             }
             failed += 1;
-            reject(stderr);
+            reject(new Error('0'));
         });
     });
 };
