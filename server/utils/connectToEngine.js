@@ -3,7 +3,7 @@ const { exec } = require('child_process');
 const { performance } = require('perf_hooks');
 
 
-const connectToEngine = (starModels) => {
+const connectToEngine = (starModel) => {
     const os = process.platform
     console.log('Os running this app:', os);
 
@@ -20,34 +20,33 @@ const connectToEngine = (starModels) => {
             const pathToRnsExe = path.join(__dirname, '..', '..', 'resources', 'engine', 'windows', 'rns.exe');
             let pathToEosFile = path.join(__dirname, '..', '..', 'resources', 'eos-files');
             console.log('Path to rns file:', pathToRnsExe);
-            console.log('starModels length:', starModels.length);
-            console.log('starModels model:', starModels[0].model);
+            console.log('starModels model:', starModel.model);
             
             
 
-            if(starModels.length === 1){
-                pathToEosFile = path.join(pathToEosFile, starModels[0].eosFile);
-                cmd = pathToRnsExe + ` -f ${pathToEosFile} -t ${starModels[0].model}`;
+            if(starModel){
+                pathToEosFile = path.join(pathToEosFile, starModel.eosFile);
+                cmd = pathToRnsExe + ` -f ${pathToEosFile} -t ${starModel.model}`;
 
-                switch (starModels[0].model) {
+                switch (starModel.model) {
                     case 'model':
-                        cmd += ` -e ${starModels[0].centralEnergyDensity}` 
-                                + `${starModels[0].limit == 'limitEnergy' ? ` -l ${starModels[0].limitValue}` : ''}`
-                                + ` -r ${starModels[0].valueForSecondInput}`
-                                + `${starModels[0].limit == 'limitSecondValue' ? ` -l ${starModels[0].limitValue}` : ''}`
-                                + `${starModels[0].limit !== 'none' ? ` -n ${starModels[0].measurements}` : ''}`
-                                + `${starModels[0].readingsIgnored ? ' -d 0' : ''}`
+                        cmd += ` -e ${starModel.centralEnergyDensity}` 
+                                + `${starModel.limit == 'limitEnergy' ? ` -l ${starModel.limitValue}` : ''}`
+                                + ` -r ${starModel.valueForSecondInput}`
+                                + `${starModel.limit == 'limitSecondValue' ? ` -l ${starModel.limitValue}` : ''}`
+                                + `${starModel.limit !== 'none' ? ` -n ${starModel.measurements}` : ''}`
+                                + `${starModel.readingsIgnored ? ' -d 0' : ''}`
                                 
                         console.log('cmd for model:', cmd);
 
                         break;
                     case 'gmass':
-                        cmd += ` -e ${starModels[0].centralEnergyDensity}` 
-                                + `${starModels[0].limit == 'limitEnergy' ? ` -l ${starModels[0].limitValue}` : ''}`
-                                + ` -m ${starModels[0].valueForSecondInput}`
-                                + `${starModels[0].limit == 'limitSecondValue' ? ` -l ${starModels[0].limitValue}` : ''}`
-                                + `${starModels[0].limit !== 'none' ? ` -n ${starModels[0].measurements}` : ''}`
-                                + `${starModels[0].readingsIgnored ? ' -d 0' : ''}`
+                        cmd += ` -e ${starModel.centralEnergyDensity}` 
+                                + `${starModel.limit == 'limitEnergy' ? ` -l ${starModel.limitValue}` : ''}`
+                                + ` -m ${starModel.valueForSecondInput}`
+                                + `${starModel.limit == 'limitSecondValue' ? ` -l ${starModel.limitValue}` : ''}`
+                                + `${starModel.limit !== 'none' ? ` -n ${starModel.measurements}` : ''}`
+                                + `${starModel.readingsIgnored ? ' -d 0' : ''}`
                         console.log('cmd for model:', cmd);
                         break;      
         
@@ -75,14 +74,17 @@ const connectToEngine = (starModels) => {
                         exec(cmd, {maxBuffer: 102400 * 1024, timeout: 240000}, (error, stdout, stderr) => {
                             if (error) {
                                 console.warn(error);
+                                failed += 1;
                             reject(error);
                             }
                             if(stdout){
                                 let t1 = performance.now();
                                 let executionTime = ((t1.toFixed(2) - t0.toFixed(2)) / 1000 / 60).toFixed(2); //In minutes
                                 console.log(`execution time: ${executionTime}  m`);
+                                succeded += 1;
                                 resolve(stdout);
                             }
+                            failed += 1;
                             reject(stderr);
                         });
                     });
@@ -91,28 +93,27 @@ const connectToEngine = (starModels) => {
                 execShellCommand(cmd)
                 .then((output) => {
                     console.log(output);
-                    succeded += 1;
-                    console.log('succeded:', succeded);  
+                    console.log('succeded:', succeded);
+                    return 1;  
                 })
                 .catch((error) => {
                     console.log('error:', error);
-                    failed += 1;
-                    console.log('failed:', failed);  
-                })
+                    console.log('failed:', failed);
+                    return 0;  
+                });
                 
                 
                  
 
-            }else if (starModels.length > 1){
-        
-            }else {
-                throw 'Fatal error -- starModels.length < 1';     
+            } else {
+                throw 'Fatal error -- starModel is null!';     
             };
             break;
     
         default:
             break;
     };
+    return 0;
 };
 
 module.exports = connectToEngine;

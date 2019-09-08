@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const connectToEngine = require('./utils/connectToEngine');
 // const isDev = false; //Testing purposes
 
+let succededModels = 0;
+let failedModels = 0;
 
 const expressServer = (isDev) => {
 
@@ -74,10 +76,31 @@ const expressServer = (isDev) => {
             console.log('No stars passed -- Shouldn\'t happen'); 
             res.status(404).send('No data sent -- logic error on button showing?'); 
         }else {
-            res.status(200).send('Data received');
-            connectToEngine(starModels);
-            
+            // res.status(200).send('Data received');
+            // starModels.forEach((star) => {
+            //     const [succeded, failed] = connectToEngine(star);
+            //     succededModels += succeded;
+            //     failedModels += failed;
+            // });
+            // res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}`);
+            let promiseArr = [];
+            starModels.forEach((star) => {
+                promiseArr.push(connectToEngine(star)); //Change to execShellCommand?
+            }); 
+            //now execute promise all
+            promiseArr.forEach((element) => {
+                succededModels += succededModels + element;
+            })
+
+            failedModels = starModels.length - succededModels;
+
+            Promise.all(promiseArr)
+            .then((res) => res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}`))
+            .catch((err) => res.send(err));
         }
+
+
+
         // if(req !== {}){
         //     res.status(200).send('Star Models reseived. Models:', req.body);
         // } else {
