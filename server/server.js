@@ -85,17 +85,65 @@ const expressServer = (isDev) => {
             // res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}`);
             let promiseArr = [];
             starModels.forEach((star) => {
-                promiseArr.push(connectToEngine(star)); //Change to execShellCommand?
-            }); 
-            //now execute promise all
-            promiseArr.forEach((element) => {
-                succededModels += succededModels + element;
-            })
+                const data = connectToEngine(star)
+                .then((output) => {
+                    console.log(output);
+                    return {number: 1};  
+                })
+                .catch((error) => {
+                    console.log('error:', error);
+                    return {number: 0};  
+                });
 
-            failedModels = starModels.length - succededModels;
+                promiseArr.push(data);
+            }); 
+            
+
+
+            // console.log('promiseArr before forEach:', promiseArr);
+            
 
             Promise.all(promiseArr)
-            .then((res) => res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}`))
+            .then((res) => {
+                console.log('promiseArr:', promiseArr);
+                
+
+                //now execute promise all
+                promiseArr.forEach((element) => {
+                    console.log('typeof element:', typeof element);
+                    
+                    console.log('element:', element);
+                    
+                    let num = 0;
+                    // for (let prop in element){
+                    //     num += element[prop];
+                    //     break;
+                    // };
+                    num = element[Object.keys(element)[0]];
+
+                    console.log('num:', num);
+                    
+
+                    // element = String(element);
+                    // console.log('typeof element:', typeof element);
+                    
+                    // console.log('element:', element);
+                    
+                    
+                    // console.log('element num:', element.toString().match(/\d+/));
+                    
+                    // let num = element.match(/\d+/);
+                    
+                    succededModels = succededModels + num;
+                })
+
+                failedModels = starModels.length - succededModels;
+
+                console.log('succededModels:', succededModels);
+                console.log('failedModels:', failedModels);
+                
+                res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}`
+                )})
             .catch((err) => res.send(err));
         }
 
