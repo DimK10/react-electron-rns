@@ -53,12 +53,9 @@ async function connectToEngine(starModel) {
         } else {
             throw new Error('Fatal error -- starModel is null!');     
         };
-        
-
-       
 
 
-        exec(cmd, {maxBuffer: 102400 * 1024, timeout: 120000}, (error, stdout, stderr) => {
+        exec(cmd, {maxBuffer: 102400 * 1024, timeout: 30000}, (error, stdout, stderr) => {
             if(stdout && !error){
                 console.log('stdout:', stdout);
                 
@@ -72,16 +69,16 @@ async function connectToEngine(starModel) {
            
             if(error && error.signal === 'SIGTERM'){
                 console.log('Entered if for sigterm');
-                reject({ reason: error.signal });
-                
-            }
+                reject({ error: error.signal });
+                return;                
+            };
             if (error) {
-                // console.warn(error);
+                console.warn(error);
                 
-            reject({ reason: error });
-            }
+                reject(error);
+                return;
+            };
            
-            reject({ reason: error });
         });
     });
 };

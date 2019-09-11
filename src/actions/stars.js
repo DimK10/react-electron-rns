@@ -50,22 +50,24 @@ export const getEosFiles = () => {
     })
     .catch((err) => {
         // console.log(err);
-        return err.data;
+        console.log('Error:', err.response);
+        
     })
 };
 
-export const sendModelsData = (starModels) => {
+export const sendModelsData = async (starModels) => {
   console.log('starModels:', starModels);
-  return axios.post('http://localhost:4000/stars', starModels)
-  .then((res) => {
+  try {
+    const res = await axios.post('http://localhost:4000/stars', starModels);
     console.log('Success');
     console.log(res.data);
     console.log(res.status);
     console.log(res.statusText);
-    return(res.status);
-  })
-  .catch((err) => {
+    return (res.data); //Send back to client
+  }
+  catch (err) {
     console.log('Error');
     console.log('Error response:', err.response);
-  })
+    return (err.response);
+  }
 };

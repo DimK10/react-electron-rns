@@ -12,7 +12,16 @@ const StarList = (props) => {
     // saveDataToDb(props.stars);
 
     const postModels = () => {
-        sendModelsData(props.stars);
+
+        (async () => {
+            let data = await sendModelsData(props.stars);
+            data.models.forEach((element, index) => {
+                if(element !== 'succeeded') {
+                    alert(`${props.stars[index].starName} has failed. Reason ${element.error}`);
+                }
+            });
+        })();
+        
     };
 
     return (

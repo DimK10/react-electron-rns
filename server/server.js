@@ -7,8 +7,11 @@ const bodyParser = require('body-parser');
 const connectToEngine = require('./utils/connectToEngine');
 // const isDev = false; //Testing purposes
 
-let succededModels = 0;
+let succeededModels = 0;
 let failedModels = 0;
+let models = []; //Will store only the necessary for successfl and failed models
+let reasonsForFailedModels = [];
+
 
 const expressServer = (isDev) => {
 
@@ -72,7 +75,7 @@ const expressServer = (isDev) => {
         // console.log('req.body', req.body);
         const starModels = req.body;
 
-        if(starModels.length == 0){
+        if(starModels.length === 0){
             console.log('No stars passed -- Shouldn\'t happen'); 
             res.status(404).send('No data sent -- logic error on button showing?'); 
         }else {
@@ -83,34 +86,65 @@ const expressServer = (isDev) => {
             }); 
             
             let num = 0;
-            Promise.all(promiseArr)
-            .then((promisesResult) => {
-                console.log('res', promisesResult);
 
-                promisesResult.forEach((singleResult) =>{
-                    if(singleResult.length > 1) {
-                        // Not rejected
-                        num++;
-                    }
+            async function allResults(arr) {
+                return Promise.all(arr.map(item => (typeof item.then == 'function' ? item.then(value => ({value, ok:true}), error => ({error, ok:false})) : Promise.resolve(item))));
+            }
+
+
+            // console.log('Promise Array with status OK:', promiseArr);
+            allResults(promiseArr)
+            .then(results => {
+                results.forEach(result => {
+                    if(result.ok) {
+                        //good
+                        succeededModels += 1;
+                        models.push('succeeded');
+                    } else {
+                        // bad
+                        failedModels += 1;
+                        models.push(result.error);
+                        // reasonsForFailedModels.push(result.error);
+                    };
                 });
-                
-                succededModels += num;
 
-                failedModels = starModels.length - succededModels;
-
-                console.log('succededModels:', succededModels);
-                console.log('failedModels:', failedModels);
-                
-                res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}`);
-                //Reset
-                succededModels = 0;
-                failedModels = 0;
-            })
-            .catch((err) => {
-                console.log('error in promise all:', err);
-                //Program reaches here but its not sending reponse back to server???
-                res.status(400).send(err);
+                res.status(200).json({
+                    succeededModels,
+                    failedModels,
+                    models 
+                });
+                // res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}. Reasons for failed models, if any: ${reasonsForFailedModels.forEach((element) => element.error)}`);                
             });
+            
+            
+            // Promise.all(promiseArr)
+            // .then((promisesResult) => {
+            //     console.log('res', promisesResult);
+
+            //     promisesResult.forEach((singleResult) =>{
+            //         if(singleResult.length > 1) {
+            //             // Not rejected
+            //             num++;
+            //         }
+            //     });
+                
+            //     succededModels += num;
+
+            //     failedModels = starModels.length - succededModels;
+
+            //     console.log('succededModels:', succededModels);
+            //     console.log('failedModels:', failedModels);
+                
+            //     res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}`);
+            //     //Reset
+            //     succededModels = 0;
+            //     failedModels = 0;
+            // })
+            // .catch((err) => {
+            //     console.log('error in promise all:', err.reason);
+            //     //Program reaches here but its not sending reponse back to server???
+            //     res.status(500).send(err.reason);
+            // });
         }
 
 
