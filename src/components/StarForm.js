@@ -20,9 +20,9 @@ class StarForm extends React.Component {
         super(props);
         this.state = {
             starName: props.star ? props.star.starName : '',
-            centralEnergyDensity: props.star ? props.star.centralEnergyDensity : '0',
+            centralEnergyDensity: props.star ? props.star.centralEnergyDensity : '0.0',
             labelForSecondInput: props.star ? props.star.labelForSecondInput : 'Axes Ratio',
-            valueForSecondInput: props.star ? props.star.valueForSecondInput : '0',
+            valueForSecondInput: props.star ? props.star.valueForSecondInput : '0.0', //Check if this is viable as a solution
             eosFiles: [],
             eosFile: props.star ? props.star.eosFile : 'eosC',
             model: props.star ? props.star.model : 'model',
@@ -68,6 +68,14 @@ class StarForm extends React.Component {
             this.setState(() => ({ error: 'Please provide a name, and a value for central Energy Density.' }));
         }else if (this.state.model !== 'test' && this.state.model !== 'kepler' && (!this.state.starName || !this.state.centralEnergyDensity || !this.state.valueForSecondInput)){
             this.setState(() => ({ error: `Please provide a name, a value for Energy and a value for ${this.state.labelForSecondInput} ` }));
+        }else if (this.state.model !== 'test' && this.state.model !== 'kepler' && this.state.limit !== 'none' && (!this.state.starName || !this.state.centralEnergyDensity || !this.state.valueForSecondInput || this.state.limitValue === '0' || this.state.measurements === '0')){
+            //Need to check if user selected limit, and so make measurements required too
+            this.setState(() => ({ error: `Please provide a name, a value for Energy and a value for ${this.state.labelForSecondInput} and for limit and for measurements!` }));
+            // if(this.state.limit !== 'none' && (this.state.limitValue === '0' || this.state.measurements === '0')) {
+            //     this.setState(() => ({ error:  `Please provide a name, a value for Energy, a value for ${this.state.labelForSecondInput} and for limit and measurements!`}));
+            // }else{
+            //     this.setState(() => ({ error: `Please provide a name, a value for Energy and a value for ${this.state.labelForSecondInput} ` }));
+            // }
         }else if (this.state.model === 'test') {
             this.setState(() => ({ error: '' }));
             this.props.onSubmit({
@@ -234,7 +242,7 @@ class StarForm extends React.Component {
                     <div className = "wrapper1">
                         <InputLabel>Choose EOS file</InputLabel>
                         <Select
-                            disabled={this.state.eosFiles[0] == 'No eos files in folder!'}
+                            disabled={this.state.eosFiles[0] === 'No eos files in folder!'}
                             value={this.state.eosFile}
                             onChange={this.handleEosFIleSelectChange}
                         >     
@@ -267,9 +275,9 @@ class StarForm extends React.Component {
                         <TextField
                             id="standard-with-placeholder"
                             label="Energy Value"
-                            placeholder="0"
+                            placeholder="ex. 2e14"
                             margin="normal"
-                            value={this.state.centralEnergyDensity}
+                            value={this.state.centralEnergyDensity === '0.0' ? '' : this.state.centralEnergyDensity}
                             onChange={this.onEnergyChange}
                         />
                     }
@@ -282,11 +290,12 @@ class StarForm extends React.Component {
                         &&
                         <TextField
                             id="standard-with-placeholder"
-                            error={!this.state.valueForSecondInput.match(/^[+-]?\d+(?:\.\d*(?:[eE][+-]?\d+)?)?$/)}
+                            // error={!this.state.valueForSecondInput.match(/^[+-]?\d+(?:\.\d*(?:[eE][+-]?\d+)?)?$/)}
+                            error = {!this.state.valueForSecondInput.match(/\d+(?:\.\d*(?:[eE][+-]?\d+)?)?$/)}
                             label={this.state.labelForSecondInput}
                             placeholder="ex. 2e14" 
                             margin="normal"
-                            value={this.state.valueForSecondInput === '0' ? '' : this.state.valueForSecondInput} 
+                            value={this.state.valueForSecondInput === '0.0' ? '' : this.state.valueForSecondInput} 
                             onChange={this.onSecondInputChange}
                         />
                     }
