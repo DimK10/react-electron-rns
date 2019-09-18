@@ -63,7 +63,8 @@
     "build": "rescripts build",
     "test": "rescripts test",
     "eject": "react-scripts eject",
-    "electron-dev": "concurrently \"yarn start\" \"electron .\" \"nodemon server/server.js\"",
+    "electron-dev:windows": "concurrently \"yarn start\" \"electron .\" \"nodemon server/server.js\"",
+    "electron-dev:linux": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "electron-prod": "electron .",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn build",
@@ -87,6 +88,7 @@
     "electron-builder": "^20.38.5",
     "electron-packager": "^14.0.4",
     "typescript": "^3.3.3333",
-    "wait-on": "^3.2.0"
+    "wait-on": "^3.2.0",
+    "yarn": "^1.17.3"
   }
 }
