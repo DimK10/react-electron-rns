@@ -5,6 +5,7 @@ const fs = require('fs');
 const port = process.env.PORT || 4000;
 const bodyParser = require('body-parser');
 const connectToEngine = require('./utils/connectToEngine');
+const uuid = require('uuid');
 // const isDev = false; //Testing purposes
 
 let succeededModels = 0;
@@ -71,9 +72,14 @@ const expressServer = (isDev) => {
         });
     });
 
-    app.post('/stars', (req, res) => {
+    app.post('/stars/:id', (req, res) => {
         // console.log('req.body', req.body);
+        const id = req.params.id;
         const starModels = req.body;
+        console.log('id in express:', id);
+        console.log('starModels in express:', starModels);
+        
+        
 
         if(starModels.length === 0){
             console.log('No stars passed -- Shouldn\'t happen'); 
@@ -109,6 +115,7 @@ const expressServer = (isDev) => {
                 });
 
                 res.status(200).json({
+                    id,
                     succeededModels,
                     failedModels,
                     models 

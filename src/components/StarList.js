@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import StarListItem from './StarListItem';
 import selectStars from '../selectors/stars';
-import { sendModelsData } from '../actions/stars.js';
+import { sendModelsData, deleteData } from '../actions/stars.js';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import uuid from 'uuid';
 import '../styles/StarList.css'
 
 const StarList = (props) => {
@@ -14,12 +15,23 @@ const StarList = (props) => {
     const postModels = () => {
 
         (async () => {
-            let data = await sendModelsData(props.stars);
+            let stars = {
+                id: uuid(),
+                starModels: props.stars
+            };
+            console.log('stars data:', stars);
+            
+            let data = await sendModelsData(stars);
+            console.log('data send from server:', data);
+
             data.models.forEach((element, index) => {
                 if(element !== 'succeeded') {
                     alert(`${props.stars[index].starName} has failed. Reason ${element.error}`);
                 }
             });
+            
+            await deleteData(data.id);
+
         })();
         
     };

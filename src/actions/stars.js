@@ -55,10 +55,10 @@ export const getEosFiles = () => {
     })
 };
 
-export const sendModelsData = async (starModels) => {
-  console.log('starModels:', starModels);
+export const sendModelsData = async (stars) => {
+  console.log('stars in sendModelsData:', stars);
   try {
-    const res = await axios.post('http://localhost:4000/stars', starModels);
+    const res = await axios.post(`http://localhost:4000/stars/${ stars.id }`, stars.starModels);
     console.log('Success');
     console.log(res.data);
     console.log(res.status);
@@ -71,3 +71,15 @@ export const sendModelsData = async (starModels) => {
     return (err.response);
   }
 };
+
+export const deleteData = async (id) => {
+    try {
+      const res = await axios.delete(`http://localhost:4000/stars/${ id }.json`);
+      console.log('Success! Previous star models deleted');
+      console.log('data:', res);
+    }
+    catch (err) {
+      console.log('Error in deleting previous models');
+      console.log('Error data:', err);
+    }
+  };
