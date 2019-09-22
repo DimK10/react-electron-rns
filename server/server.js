@@ -101,6 +101,9 @@ const expressServer = (isDev) => {
             // console.log('Promise Array with status OK:', promiseArr);
             allResults(promiseArr)
             .then(results => {
+                models = [];  //Reset?
+                succeededModels = 0;
+                failedModels = 0;
                 results.forEach(result => {
                     if(result.ok) {
                         //good

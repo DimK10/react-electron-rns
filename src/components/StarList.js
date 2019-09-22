@@ -30,7 +30,7 @@ const StarList = (props) => {
                 }
             });
             
-            await deleteData(data.id);
+            await deleteData(data.id, data);
 
         })();
         
