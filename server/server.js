@@ -5,13 +5,11 @@ const fs = require('fs');
 const port = process.env.PORT || 4000;
 const bodyParser = require('body-parser');
 const connectToEngine = require('./utils/connectToEngine');
-const uuid = require('uuid');
 // const isDev = false; //Testing purposes
 
 let succeededModels = 0;
 let failedModels = 0;
 let models = []; //Will store only the necessary for successfl and failed models
-let reasonsForFailedModels = [];
 
 
 const expressServer = (isDev) => {
@@ -123,47 +121,8 @@ const expressServer = (isDev) => {
                     failedModels,
                     models 
                 });
-                // res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}. Reasons for failed models, if any: ${reasonsForFailedModels.forEach((element) => element.error)}`);                
             });
-            
-            
-            // Promise.all(promiseArr)
-            // .then((promisesResult) => {
-            //     console.log('res', promisesResult);
-
-            //     promisesResult.forEach((singleResult) =>{
-            //         if(singleResult.length > 1) {
-            //             // Not rejected
-            //             num++;
-            //         }
-            //     });
-                
-            //     succededModels += num;
-
-            //     failedModels = starModels.length - succededModels;
-
-            //     console.log('succededModels:', succededModels);
-            //     console.log('failedModels:', failedModels);
-                
-            //     res.status(200).send(`succeeded ${succededModels} and failed ${failedModels}`);
-            //     //Reset
-            //     succededModels = 0;
-            //     failedModels = 0;
-            // })
-            // .catch((err) => {
-            //     console.log('error in promise all:', err.reason);
-            //     //Program reaches here but its not sending reponse back to server???
-            //     res.status(500).send(err.reason);
-            // });
-        }
-
-
-
-        // if(req !== {}){
-        //     res.status(200).send('Star Models reseived. Models:', req.body);
-        // } else {
-        //     res.status(400).send('Not received');
-        // }
+        };
     });
 
       app.listen(port, () => {
