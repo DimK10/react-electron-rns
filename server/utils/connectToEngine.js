@@ -55,7 +55,7 @@ async function connectToEngine(starModel) {
         };
 
 
-        exec(cmd, {maxBuffer: 102400 * 1024, timeout: 30000}, (error, stdout, stderr) => {
+        exec(cmd, {maxBuffer: 102400 * 1024, timeout: 120000}, (error, stdout, stderr) => {
             if(stdout && !error){
                 console.log('stdout:', stdout);
                 

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import StarListItem from './StarListItem';
 import selectStars from '../selectors/stars';
-import { sendModelsData, deleteData } from '../actions/stars.js';
+import { sendModelsData } from '../actions/stars.js';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import uuid from 'uuid';
@@ -17,7 +17,7 @@ const StarList = (props) => {
         (async () => {
             let stars = {
                 id: uuid(),
-                starModels: props.stars
+                starModels: [...props.stars].reverse() // For some reason, stars are saved in reverse order even with push
             };
             console.log('stars data:', stars);
             
@@ -29,9 +29,6 @@ const StarList = (props) => {
                     alert(`${props.stars[index].starName} has failed. Reason ${element.error}`);
                 }
             });
-            
-            await deleteData(data.id, data);
-
         })();
         
     };
@@ -47,7 +44,7 @@ const StarList = (props) => {
                 )
             }
             {
-                props.stars.map((star) => {
+                [...props.stars].reverse().map((star) => {
                     return <StarListItem key={star.id} star={star} />
                 })
             }

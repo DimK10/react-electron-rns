@@ -3,6 +3,9 @@ const starsReducerDefaultState = [];
 export default (state = starsReducerDefaultState, action) => {
     switch (action.type) {
         case 'ADD_STAR':
+            // let newStars = [ ...state ];
+            // newStars.push(action.star);
+            // return newStars;
           return [
             ...state,
             action.star

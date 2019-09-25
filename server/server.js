@@ -5,14 +5,17 @@ const fs = require('fs');
 const port = process.env.PORT || 4000;
 const bodyParser = require('body-parser');
 const connectToEngine = require('./utils/connectToEngine');
+const extractValues = require('./utils/extractValues');
+const sortData = require('./utils/sortData');
 // const isDev = false; //Testing purposes
 
-let succeededModels = 0;
-let failedModels = 0;
-let models = []; //Will store only the necessary for successfl and failed models
+
+
 
 
 const expressServer = (isDev) => {
+
+    
 
     // const eosPathBuild = path.join(__dirname, '../../eos-files'); This is the right one for production 
     const eosPath = isDev ? path.join(__dirname, '..', 'resources', 'eos-files') : path.join(__dirname, '../../eos-files');
@@ -76,7 +79,14 @@ const expressServer = (isDev) => {
         const starModels = req.body;
         console.log('id in express:', id);
         console.log('starModels in express:', starModels);
-        
+
+        let succeededModels = 0;
+        let failedModels = 0;
+        let models = []; //Will store only the necessary for successfl and failed models
+        let resultsFromRns = []; // Holds the outputs created from rns.exe
+        let outputs = [];
+        let valuesForGraph = []; // Array that stores the objects of values calculated from rns.exe
+            
         
 
         if(starModels.length === 0){
@@ -89,8 +99,6 @@ const expressServer = (isDev) => {
                 promiseArr.push(data);
             }); 
             
-            let num = 0;
-
             async function allResults(arr) {
                 return Promise.all(arr.map(item => (typeof item.then == 'function' ? item.then(value => ({value, ok:true}), error => ({error, ok:false})) : Promise.resolve(item))));
             }
@@ -107,6 +115,7 @@ const expressServer = (isDev) => {
                         //good
                         succeededModels += 1;
                         models.push('succeeded');
+                        resultsFromRns.push(result.value);
                     } else {
                         // bad
                         failedModels += 1;
@@ -115,11 +124,23 @@ const expressServer = (isDev) => {
                     };
                 });
 
+                // Extract floats from results and assign to the right arrays
+                // This will be done in a new file 
+
+                outputs = extractValues(resultsFromRns); // outputs is now an array of arrays!!!
+                // valuesForGraph = sortData(outputs);
+                // Reset
+                outputs.forEach(output => {
+                    valuesForGraph = [ ...valuesForGraph, sortData(output) ]; // Object containig objects
+                });
+                
+
                 res.status(200).json({
                     id,
                     succeededModels,
                     failedModels,
-                    models 
+                    models,
+                    valuesForGraph 
                 });
             });
         };
