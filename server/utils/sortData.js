@@ -39,7 +39,7 @@ const sortData = (output) => {
         r_e,
         r_pR_e
     };
-
+    
     let divider = output.length / 17;
     let modulo = output.length % 17;
 
@@ -106,63 +106,63 @@ const sortData = (output) => {
         
     };
 
-    // This should be a case 
-    if( modulo !== 0) {
-        for (let k = 0; k < modulo; k++) {
-            switch (k) {
-                case 0:
-                    e_c.push(output[k + (divider * 17)]);
-                    break;
-                case 1:
-                    M.push(output[k + (divider * 17)]);
-                    break;
-                case 2:
-                    M_0.push(output[k + (divider * 17)]);
-                    break;
-                case 3:
-                    R_e.push(output[k + (divider * 17)]);
-                    break;
-                case 4:
-                    Omega.push(output[k + (divider * 17)]);
-                    break;
-                case 5:
-                    Omega_p.push(output[k + (divider * 17)]);
-                    break;
-                case 6:
-                    TW.push(output[k + (divider * 17)]);
-                    break;
-                case 7:
-                    cJGM_sun2.push(output[k + (divider * 17)]);
-                    break;
-                case 8:
-                    I.push(output[k + (divider * 17)]);
-                    break;
-                case 9:
-                    h_plus.push(output[k + (divider * 17)]);
-                    break;
-                case 10:
-                    h_minus.push(output[k + (divider * 17)]);
-                    break;
-                case 11:
-                    Z_p.push(output[k + (divider * 17)]);
-                    break;
-                case 12:
-                    Z_f.push(output[k + (divider * 17)]);
-                    break;
-                case 13:
-                    Z_b.push(output[k + (divider * 17)]);
-                    break;
-                case 14:
-                    omega_cOmega.push(output[k + (divider * 17)]);
-                    break;
-                case 15:
-                    r_e.push(output[k + (divider * 17)]);;
-                    break;
-                default:
-                    break;
-        };
-    };     
-};
+    // This should NOT be a case 
+//     if( modulo !== 0) {
+//         for (let k = 0; k < modulo; k++) {
+//             switch (k) {
+//                 case 0:
+//                     e_c.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 1:
+//                     M.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 2:
+//                     M_0.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 3:
+//                     R_e.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 4:
+//                     Omega.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 5:
+//                     Omega_p.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 6:
+//                     TW.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 7:
+//                     cJGM_sun2.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 8:
+//                     I.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 9:
+//                     h_plus.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 10:
+//                     h_minus.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 11:
+//                     Z_p.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 12:
+//                     Z_f.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 13:
+//                     Z_b.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 14:
+//                     omega_cOmega.push(output[k + (divider * 17)]);
+//                     break;
+//                 case 15:
+//                     r_e.push(output[k + (divider * 17)]);;
+//                     break;
+//                 default:
+//                     break;
+//         };
+//     };     
+// };
     
 
 
