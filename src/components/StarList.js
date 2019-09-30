@@ -70,7 +70,7 @@ export class StarList extends React.Component {
                 {
                     !this.state.loading
                     &&
-                    this.props.stars.map((star) => {
+                    [...this.props.stars].reverse().map((star) => {
                         return <StarListItem key={star.id} star={star} />
                     })
                 }
