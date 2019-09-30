@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import StarListItem from './StarListItem';
 import selectStars from '../selectors/stars';
-import { sendModelsData } from '../actions/stars.js';
+import { sendModelsData, addChartData } from '../actions/stars.js';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import uuid from 'uuid';
@@ -29,6 +30,8 @@ const StarList = (props) => {
                     alert(`${props.stars[index].starName} has failed. Reason ${element.error}`);
                 }
             });
+
+            props.history.push('/chart', { chartData: data.valuesForGraph })
         })();
         
     };
@@ -66,5 +69,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-
-export default connect(mapStateToProps)(StarList);
+export default withRouter(connect(mapStateToProps)(StarList));

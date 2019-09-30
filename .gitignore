@@ -22,3 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /dist
+# This eos is added for test rns.exe manually
+/resources/engine/windows/eosC
