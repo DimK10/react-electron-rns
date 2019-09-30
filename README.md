@@ -1,6 +1,6 @@
 ## What is this program
 
-This program, is basically a wrapper that executes rns1.1c console program asyncronously, gets the data, and makes plots from them. Currently, it can be run, in either Windows or Linux OS. 
+This program, is basically a wrapper that executes rns1.1c console program asyncronously, gets the data, and makes plots from these. Currently, it can be run, in either Windows or Linux OS. 
 
 ## To run setup and run:
 
