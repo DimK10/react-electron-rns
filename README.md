@@ -1,4 +1,8 @@
-To run setup and run:
+## What is this program
+
+This program, is basically a wrapper that executes rns1.1c console program asyncronously, gets the data, and makes plots from them. Currently, it can be run, in either Windows or Linux OS. 
+
+## To run setup and run:
 
 ### git clone https://github.com/DimK10/react-electron-rns.git
 ### cd react-electron-rns
