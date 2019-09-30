@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import randomColor from 'randomcolor';
+import '../styles/ChartPage.css';
+
 
 export class ChartPage extends React.Component {
     constructor(props){
@@ -35,13 +37,15 @@ export class ChartPage extends React.Component {
         //     chartData = [...chartData, this.props.location.state.chartData[0].R_e];
         // };
         // chartData = chartData.map(String);
-        let chartData = this.props.location.state.chartData[0].R_e.map(String);
+        // For some reason, R_e is displayed wornd -- needs to be reversed
+        let chartData = this.props.location.state.chartData[0].R_e.map(String).reverse();
         this.setState((prevState) => ({ xValues: [...prevState.xValues, ...chartData] }));
     
             for (let i = 0; i < this.props.location.state.chartData.length; i++) {
                 this.setState((prevState) => ({ 
                     datasets: [...prevState.datasets, {
-                        values: this.props.location.state.chartData[i].M
+                        name: 'model ' + (i + 1),
+                        values: this.props.location.state.chartData[i].M.reverse()
                     }],
                     colors: [...prevState.colors, randomColor().toString()]
                     }));
@@ -74,24 +78,27 @@ export class ChartPage extends React.Component {
 
     render(){
         return (
-            <div>
-                <ReactFrappeChart
-                    type="line"
-                    colors={this.state.colors}
-                    axisOptions={{ xAxisMode: "tick", yAxisMode: "tick", xIsSeries: 1 }}
-                    height={550}
-                    data={{
-                        labels: this.state.xValues, // This is for x axis
-                        datasets: this.state.datasets
-                        // datasets: [{ 
-                        //     name: "M", chartType: 'line',
-                        //     values: this.props.location.state.chartData[0].M
-                        // }] // y Axis
-                    }}
-                />
-                <Button variant="contained" onClick={this.goBack}>
-                    <Typography>Go Back To DashBoard</Typography>
-                </Button> 
+            <div className="container">
+                <div className="chart">
+                    <ReactFrappeChart
+                        title = "Chart With M in Y Axis and R_e in X Axis:"
+                        type="line"
+                        colors={this.state.colors}
+                        axisOptions={{ xAxisMode: "tick", yAxisMode: "tick", xIsSeries: 1 }}
+                        height={550}
+                        data={{
+                            labels: this.state.xValues, // This is for x axis
+                            datasets: this.state.datasets
+                            // datasets: [{ 
+                            //     name: "M", chartType: 'line',
+                            //     values: this.props.location.state.chartData[0].M
+                            // }] // y Axis
+                        }}
+                    />
+                    <Button variant="contained" onClick={this.goBack}>
+                        <Typography>Go Back To DashBoard</Typography>
+                    </Button> 
+                </div>
             </div>
         )
     }
