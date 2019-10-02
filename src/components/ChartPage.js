@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import randomColor from 'randomcolor';
 import '../styles/ChartPage.css';
 import { MenuItem } from '@material-ui/core';
+import { dark } from '@material-ui/core/styles/createPalette';
 
 
 export class ChartPage extends React.Component {
@@ -44,6 +45,8 @@ export class ChartPage extends React.Component {
     componentWillMount() {
         // let chartData = this.props.location.state.chartData[0].R_e.map(String).reverse();
         // this.setState((prevState) => ({ xValues: [...prevState.xValues, ...chartData] }));
+        console.log('this.props.location.state.chartData:', this.props.location.chartData);
+        
         this.changeXAxis(true);
         this.changeYAxis(true);
     };
@@ -83,9 +86,9 @@ export class ChartPage extends React.Component {
             case 'M':
                 shouldReverseData
                 ?
-                chartData = this.props.location.state.chartData[0].M.reverse().map(String)
+                    this.props.location.state.chartData.length !== 0 ? chartData = this.props.location.state.chartData[0].M.reverse().map(String) : chartData = [0]
                 :
-                chartData = this.props.location.state.chartData[0].M.map(String);
+                    chartData = this.props.location.state.chartData[0].M.map(String);
                 break;
             case 'M_0':
                 chartData = this.props.location.state.chartData[0].M_0.map(String);
@@ -93,9 +96,9 @@ export class ChartPage extends React.Component {
             case 'R_e':
                 shouldReverseData 
                 ? 
-                chartData = this.props.location.state.chartData[0].R_e.reverse().map(String) 
+                    this.props.location.state.chartData.length !== 0 ? chartData = this.props.location.state.chartData[0].R_e.reverse().map(String) : chartData = [0]
                 : 
-                chartData = this.props.location.state.chartData[0].R_e.map(String);
+                    chartData = this.props.location.state.chartData[0].R_e.map(String);
                 break;
             case 'Omega':
                 chartData = this.props.location.state.chartData[0].Omega.map(String);
@@ -154,7 +157,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].e_c
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'M':
@@ -163,7 +166,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: shouldReverseData ? this.props.location.state.chartData[i].M.reverse() : this.props.location.state.chartData[i].M
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'M_0':
@@ -172,7 +175,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].M_0
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'R_e':
@@ -181,7 +184,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: shouldReverseData ? this.props.location.state.chartData[i].R_e.reverse() : this.props.location.state.chartData[i].R_e.reverse()
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'Omega':
@@ -190,7 +193,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].Omega
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'Omega_p':
@@ -199,7 +202,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].Omega_p
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'TW':
@@ -208,7 +211,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].TW
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'cJGM_sun2':
@@ -217,7 +220,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].cJGM_sun2
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;  
                 case 'I':
@@ -226,7 +229,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].I
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'h_plus':
@@ -235,7 +238,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].h_plus
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'h_minus':
@@ -244,7 +247,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].h_minus
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'Z_p':
@@ -253,7 +256,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].Z_p
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'Z_f':
@@ -262,7 +265,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].Z_f
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'Z_b':
@@ -271,7 +274,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].Z_b
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'omega_cOmega':
@@ -280,7 +283,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].omega_cOmega
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'r_e':
@@ -289,7 +292,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].r_e
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
                 case 'r_pR_e':
@@ -298,7 +301,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].r_pR_e
                         }],
-                        colors: [...prevState.colors, randomColor().toString()]
+                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
                         }));
                     break;
             
