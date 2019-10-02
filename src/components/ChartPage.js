@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
-import Chart from 'chart.js';
+import React from 'react';
 import ReactFrappeChart from "react-frappe-charts";
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { connect } from 'react-redux';
 import randomColor from 'randomcolor';
 import '../styles/ChartPage.css';
+import { MenuItem } from '@material-ui/core';
 
 
 export class ChartPage extends React.Component {
@@ -14,42 +15,37 @@ export class ChartPage extends React.Component {
         this.state = {
             xValues: [],
             datasets: [], // For multiple plots
-            colors: []
+            colors: [],
+            xAxis: 'R_e', // Default value
+            yAxis: 'M',
+            allValues: [
+                'e_c',
+                'M',
+                'M_0',
+                'R_e',
+                'Omega',
+                'Omega_p',
+                'TW',
+                'cJGM_sun2',
+                'I',
+                'h_plus',
+                'h_minus',
+                'Z_p',
+                'Z_f',
+                'Z_b',
+                'omega_cOmega',
+                'r_e',
+                'r_pR_e'
+            ]
         };
     };
+    
 
     componentWillMount() {
-        // Add values for the data to be displayed
-        // for (let i = 1; i <= this.props.location.state.chartData[0].M.length; i++) {
-        //     this.setState((prevState) => ({ values: [...prevState.values, i] })); 
-        // };
-    
-        // Try to covent data for x axis to strings
-        //let chartData = this.props.location.state.chartData[0].e_c.map(String);
-        // console.log('chartData:', chartData);
-        
-        // Multiple plots
-        // (async () => {
-        //     await this.setData();
-        // })();
-        // let chartData = [];
-        // for (let i = 0; i < this.props.location.state.chartData[0].R_e.length; i++) {
-        //     chartData = [...chartData, this.props.location.state.chartData[0].R_e];
-        // };
-        // chartData = chartData.map(String);
-        // For some reason, R_e is displayed wornd -- needs to be reversed
-        let chartData = this.props.location.state.chartData[0].R_e.map(String).reverse();
-        this.setState((prevState) => ({ xValues: [...prevState.xValues, ...chartData] }));
-    
-            for (let i = 0; i < this.props.location.state.chartData.length; i++) {
-                this.setState((prevState) => ({ 
-                    datasets: [...prevState.datasets, {
-                        name: 'model ' + (i + 1),
-                        values: this.props.location.state.chartData[i].M.reverse()
-                    }],
-                    colors: [...prevState.colors, randomColor().toString()]
-                    }));
-            };
+        // let chartData = this.props.location.state.chartData[0].R_e.map(String).reverse();
+        // this.setState((prevState) => ({ xValues: [...prevState.xValues, ...chartData] }));
+        this.changeXAxis(true);
+        this.changeYAxis(true);
     };
 
     componentDidMount() {
@@ -58,27 +54,287 @@ export class ChartPage extends React.Component {
         console.log('state.colors:', this.state.colors);
     };
 
+    handleXValueSelectChange = (e) => {
+        const xAxis = e.target.value;
+        this.setState({ xAxis }, () => {
+            this.changeXAxis(false);
+        });
+    };
+
+    handleYValueSelectChange = (e) => {
+        const yAxis = e.target.value;
+        this.setState({ yAxis }, () => {
+            this.changeYAxis(false);
+        });
+    };
     goBack = () => {
         this.props.history.push('/');
     };
 
-    // setData = async () => {
-    //     let chartData = this.props.location.state.chartData[0].M_0.map(String);
-    //     this.setState((prevState) => ({ values: [...prevState.values, ...chartData] }));
+    changeXAxis = (shouldReverseData) => {
+        // Due to M and R_e come reversed from the outputs for some reason, i added a value, if true the data will be reversed
+        // If false, they won't. This must be done, so that the chart won't look different on each re-render
 
-    //     for (let i = 0; i < this.props.location.state.chartData.length; i++) {
-    //         this.setState((prevState) => ({ 
-    //             datasets: [...prevState.datasets, {
-    //                 values: this.props.location.state.chartData[i].R_e
-    //             }],
-    //             colors: [...prevState.colors, randomColor()]
-    //             }));
-    //     };
-    // };
+        let chartData = [];
+        switch (this.state.xAxis) {
+            case 'e_c':
+                chartData = this.props.location.state.chartData[0].e_c.map(String);
+                break;
+            case 'M':
+                shouldReverseData
+                ?
+                chartData = this.props.location.state.chartData[0].M.reverse().map(String)
+                :
+                chartData = this.props.location.state.chartData[0].M.map(String);
+                break;
+            case 'M_0':
+                chartData = this.props.location.state.chartData[0].M_0.map(String);
+                break;
+            case 'R_e':
+                shouldReverseData 
+                ? 
+                chartData = this.props.location.state.chartData[0].R_e.reverse().map(String) 
+                : 
+                chartData = this.props.location.state.chartData[0].R_e.map(String);
+                break;
+            case 'Omega':
+                chartData = this.props.location.state.chartData[0].Omega.map(String);
+                break;
+            case 'Omega_p':
+                chartData = this.props.location.state.chartData[0].Omega_p.map(String);
+                break;
+            case 'TW':
+                chartData = this.props.location.state.chartData[0].TW.map(String);
+                break;
+            case 'cJGM_sun2':
+                chartData = this.props.location.state.chartData[0].cJGM_sun2.map(String);
+                break; 
+            case 'I':
+                chartData = this.props.location.state.chartData[0].I.map(String);
+                break; 
+            case 'h_plus':
+                chartData = this.props.location.state.chartData[0].h_plus.map(String);
+                break; 
+            case 'h_minus':
+                chartData = this.props.location.state.chartData[0].h_minus.map(String);
+                break; 
+            case 'Z_p':
+                chartData = this.props.location.state.chartData[0].Z_p.map(String);
+                break; 
+            case 'Z_f':
+                chartData = this.props.location.state.chartData[0].Z_f.map(String);
+                break; 
+            case 'Z_b':
+                chartData = this.props.location.state.chartData[0].Z_b.map(String);
+                break; 
+            case 'omega_cOmega':
+                chartData = this.props.location.state.chartData[0].omega_cOmega.map(String);
+                break;
+            case 'r_e':
+                chartData = this.props.location.state.chartData[0].r_e.map(String);
+                break; 
+            case 'r_pR_e':
+                chartData = this.props.location.state.chartData[0].r_pR_e.map(String);
+                break; 
+        
+            default:
+                break;
+        };
+
+        this.setState({ xValues: [...chartData] });
+    };
+
+    changeYAxis = (shouldReverseData) => {
+        this.setState({ datasets: [] });
+        for (let i = 0; i < this.props.location.state.chartData.length; i++) {
+            switch (this.state.yAxis) {
+                case 'e_c':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].e_c
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'M':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: shouldReverseData ? this.props.location.state.chartData[i].M.reverse() : this.props.location.state.chartData[i].M
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'M_0':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].M_0
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'R_e':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: shouldReverseData ? this.props.location.state.chartData[i].R_e.reverse() : this.props.location.state.chartData[i].R_e.reverse()
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'Omega':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].Omega
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'Omega_p':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].Omega_p
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'TW':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].TW
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'cJGM_sun2':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].cJGM_sun2
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;  
+                case 'I':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].I
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'h_plus':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].h_plus
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'h_minus':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].h_minus
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'Z_p':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].Z_p
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'Z_f':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].Z_f
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'Z_b':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].Z_b
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'omega_cOmega':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].omega_cOmega
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'r_e':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].r_e
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+                case 'r_pR_e':
+                    this.setState((prevState) => ({ 
+                        datasets: [...prevState.datasets, {
+                            name: 'model ' + (i + 1),
+                            values: this.props.location.state.chartData[i].r_pR_e
+                        }],
+                        colors: [...prevState.colors, randomColor().toString()]
+                        }));
+                    break;
+            
+                default:
+                    break;
+            };
+        };
+    };
 
     render(){
         return (
             <div className="container">
+                <div className="selects">
+                    <InputLabel>Change X Axis</InputLabel>
+                    <Select
+                        value={this.state.xAxis}
+                        onChange={this.handleXValueSelectChange}
+                    >     
+                    {
+                        this.state.allValues.filter(value => value !== this.state.yAxis).map((value) => {
+                            return <MenuItem key={value} value={value}>{value}</MenuItem>
+                        }) 
+                    }
+                    </Select> 
+                    <InputLabel>Change Y Axis</InputLabel>
+                    <Select
+                        value={this.state.yAxis}
+                        onChange={this.handleYValueSelectChange}
+                    >     
+                    {
+                        this.state.allValues.filter(value => value !== this.state.xAxis).map((value) => {
+                            return <MenuItem key={value} value={value}>{value}</MenuItem>
+                        }) 
+                    }
+                    </Select> 
+                </div>
                 <div className="chart">
                     <ReactFrappeChart
                         title = "Chart With M in Y Axis and R_e in X Axis:"
@@ -89,10 +345,6 @@ export class ChartPage extends React.Component {
                         data={{
                             labels: this.state.xValues, // This is for x axis
                             datasets: this.state.datasets
-                            // datasets: [{ 
-                            //     name: "M", chartType: 'line',
-                            //     values: this.props.location.state.chartData[0].M
-                            // }] // y Axis
                         }}
                     />
                     <Button variant="contained" onClick={this.goBack}>
@@ -103,147 +355,5 @@ export class ChartPage extends React.Component {
         )
     }
 };
-
-// This might also work -- just need to use componentWillMount!
-// export const ChartPage = (props) => {
-
-//     useEffect(() => {
-//         console.log('chartData:', props.location.state.chartData[0].e_c);
-//     }, []);
-
-//     return (
-//      <div>
-//         <p>{props.location.state.chartData[0].e_c}</p>
-//         <ReactFrappeChart
-//             type="line"
-//             colors={["#21ba45"]}
-//             axisOptions={{ xAxisMode: "tick", yAxisMode: "tick", xIsSeries: 1 }}
-//             height={250}
-//             data={{
-//                 labels: ["1", "2", "3", "4"],
-//                 datasets: [{ values: props.location.state.chartData[0].e_c }]
-//             }}
-//         />
-//      </div>
-//     );
-//   }
-
-//class ChartPage extends React.Component {
-
-//     constructor(props){
-//         super(props);
-//         this.state = {
-//             datasets: [],
-//             yAxes: []
-//         };
-//         this.chartRef = React.createRef();
-//     }
-
-//     componentDidMount = () => {
-//         // Find out how many models are needed to make plots
-//         const plotsNeeded = this.props.location.state.chartData.length;
-//         console.log('plotsNeeded:', plotsNeeded);
-        
-//         let datasets = [];
-//         let yAxes = [];
-//         for (let i = 0; i < plotsNeeded; i++) {
-//             let color = randomColor();
-//             datasets = [ ...datasets, {
-//                 label: i,
-//                 borderColor: color,
-//                 backgroundColor: color,
-//                 fill: false,
-//                 data: this.props.location.state.chartData[i].e_c,
-//                 yAxisID: 'y-axis-' + i
-//             }]
-
-
-//             yAxes = [ ...yAxes, {
-//                 type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-//                 display: true,
-//                 id: 'y-axis-' + i,
-//                 gridLines: {
-//                     drawOnChartArea: false
-//                 }
-//             }];
-//         };
-//         console.log('datasets before setState:', datasets);
-//         console.log('yAxes before setState:', yAxes);
-        
-        
-
-//         // Add datasets and yAxes to state
-//         // this.setState(({
-//         //     datasets,
-//         //     yAxes
-//         // }));
-
-//         // console.log('datasets after setState:',this.state.datasets);
-//         // console.log('yAxes after setState:', this.state.yAxes);
-        
-//         this.updateCanvas(datasets, yAxes);
-//     };
-
-//     updateCanvas = (datasets = [], yAxes = []) => {
-
-//         console.log('datasets in updateCanvas:', datasets);
-//         console.log('yAxes in updateCanvas:', yAxes);
-        
-        
-//         let lineChartData = {
-//             labels: ['0', '10', '20', '30', '40'],
-//             datasets
-//         };
-
-//         console.log('lineChartData with datasets:', lineChartData);
-        
-
-
-//         const ctx = this.refs.canvas.getContext('2d');
-//         console.log('ctx:', ctx);
-
-//         const chartOptions = {
-//             data: {
-//                 labels: ['0', '10', '20', '30', '40'],
-//                 datasets
-//             },
-//             options: {
-//                 responsive: true,
-//                 hoverMode: 'index',
-//                 stacked: false,
-//                 title: {
-//                     display: true,
-//                     text: 'Test Chart M with e_c'
-//                 },
-//                 scales: {
-//                     yAxes
-//                 }
-//             }
-//         }
-
-//         console.log('chartOptions:', chartOptions);
-        
-        
-//         let chart = new Chart(ctx, chartOptions);
-        
-//         console.log('chart as data:', chart);
-        
-//     }
-//     render() {
-//         return (
-//            <div>
-//                 <p>In canvas</p>
-//                 <canvas ref="canvas" width="600" height="500" />
-//            </div>
-//         );
-//     }
-
-// };
-
-// const mapStateToProps = (state) => {
-//     return {
-//         chartData: state.chartData
-//     };
-// };
 
 export default ChartPage;
