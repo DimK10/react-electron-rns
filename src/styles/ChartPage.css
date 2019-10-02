@@ -4,6 +4,21 @@
     align-items: center;
 }
 
+.selects {
+    display: flex;
+    align-items: center;
+}
+
+.selectWithText {
+    margin: 10px;
+}
+
+.select {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 
 .chart {
     width: 375px;

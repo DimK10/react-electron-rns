@@ -312,28 +312,36 @@ export class ChartPage extends React.Component {
         return (
             <div className="container">
                 <div className="selects">
-                    <InputLabel>Change X Axis</InputLabel>
-                    <Select
-                        value={this.state.xAxis}
-                        onChange={this.handleXValueSelectChange}
-                    >     
-                    {
-                        this.state.allValues.filter(value => value !== this.state.yAxis).map((value) => {
-                            return <MenuItem key={value} value={value}>{value}</MenuItem>
-                        }) 
-                    }
-                    </Select> 
-                    <InputLabel>Change Y Axis</InputLabel>
-                    <Select
-                        value={this.state.yAxis}
-                        onChange={this.handleYValueSelectChange}
-                    >     
-                    {
-                        this.state.allValues.filter(value => value !== this.state.xAxis).map((value) => {
-                            return <MenuItem key={value} value={value}>{value}</MenuItem>
-                        }) 
-                    }
-                    </Select> 
+                    <div className="selectWithText">
+                        <InputLabel>Change X Axis</InputLabel>
+                        <div className="select">
+                            <Select
+                                value={this.state.xAxis}
+                                onChange={this.handleXValueSelectChange}
+                            >     
+                            {
+                                this.state.allValues.filter(value => value !== this.state.yAxis).map((value) => {
+                                    return <MenuItem key={value} value={value}>{value}</MenuItem>
+                                }) 
+                            }
+                            </Select> 
+                        </div>
+                    </div>
+                    <div className="selectWithText">
+                        <InputLabel>Change Y Axis</InputLabel>
+                        <div className="select">
+                            <Select
+                                value={this.state.yAxis}
+                                onChange={this.handleYValueSelectChange}
+                            >     
+                            {
+                                this.state.allValues.filter(value => value !== this.state.xAxis).map((value) => {
+                                    return <MenuItem key={value} value={value}>{value}</MenuItem>
+                                }) 
+                            }
+                            </Select>
+                        </div>
+                    </div>
                 </div>
                 <div className="chart">
                     <ReactFrappeChart
