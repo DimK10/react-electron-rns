@@ -6,10 +6,20 @@ const extractValues = (resultsFromRns) => {
         // Since output has all the data, with the wrong values, this needs to be done
         console.log('floats:', floats);
         floats.shift();
-        let measurements = floats.length / 18; // Might need math.ceil
-        for (let i = 1; i <= measurements; i++) {
-            floats.splice(i * 17, 1);
+        let measurements = Math.ceil(floats.length / 18); 
+
+        // This is s messy and a temp solution -- static model doesn't produce I value, so additional things must be done
+        if((measurements * 17) - 1  === floats.length){
+            // This is a static model
+            for (let i = 1; i <= measurements; i++) {
+                floats.splice((i * 17) - 1, 1);
+            };
+        } else {
+            for (let i = 1; i <= measurements; i++) {
+                floats.splice(i * 17, 1);
+            };
         };
+        
         return floats;
     });
     // Remove first element of array, regex catches accuracy=1e-05 and parses it

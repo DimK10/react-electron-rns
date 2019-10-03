@@ -39,70 +39,136 @@ const sortData = (output) => {
         r_e,
         r_pR_e
     };
+
+   
     
-    let divider = output.length / 17;
+    let divider = Math.ceil(output.length / 17);
     let modulo = output.length % 17;
 
-    for (let i = 0; i < divider; i++) {
-       for (let j = 0; j < 17; j++) {
-            switch (j) {
-                case 0:
-                    e_c.push(output[j + (i * 17)]);
-                    break;
-                case 1:
-                    M.push(output[j + (i * 17)]);
-                    break;
-                case 2:
-                    M_0.push(output[j + (i * 17)]);
-                    break;
-                case 3:
-                    R_e.push(output[j + (i * 17)]);
-                    break;
-                case 4:
-                    Omega.push(output[j + (i * 17)]);
-                    break;
-                case 5:
-                    Omega_p.push(output[j + (i * 17)]);
-                    break;
-                case 6:
-                    TW.push(output[j + (i * 17)]);
-                    break;
-                case 7:
-                    cJGM_sun2.push(output[j + (i * 17)]);
-                    break;
-                case 8:
-                    I.push(output[j + (i * 17)]);
-                    break;
-                case 9:
-                    h_plus.push(output[j + (i * 17)]);
-                    break;
-                case 10:
-                    h_minus.push(output[j + (i * 17)]);
-                    break;
-                case 11:
-                    Z_p.push(output[j + (i * 17)]);
-                    break;
-                case 12:
-                    Z_f.push(output[j + (i * 17)]);
-                    break;
-                case 13:
-                    Z_b.push(output[j + (i * 17)]);
-                    break;
-                case 14:
-                    omega_cOmega.push(output[j + (i * 17)]);
-                    break;
-                case 15:
-                    r_e.push(output[j + (i * 17)]);;
-                    break;
-                case 16:
-                    r_pR_e.push(output[j + (i * 17)]);
-                    break;    
-            
-                default:
-                    break;
+     // Chect for static model -- It does't produce I valuesReadyForGraph
+     if( modulo !== 0) {
+         // Static model
+
+        for (let i = 0; i < divider; i++) {
+            for (let j = 0; j < 16; j++) { // Check the iteration error
+                switch (j) {
+                    case 0:
+                        e_c.push(output[j + (i * 16)]);
+                        break;
+                    case 1:
+                        M.push(output[j + (i * 16)]);
+                        break;
+                    case 2:
+                        M_0.push(output[j + (i * 16)]);
+                        break;
+                    case 3:
+                        R_e.push(output[j + (i * 16)]);
+                        break;
+                    case 4:
+                        Omega.push(output[j + (i * 16)]);
+                        break;
+                    case 5:
+                        Omega_p.push(output[j + (i * 16)]);
+                        break;
+                    case 6:
+                        TW.push(output[j + (i * 16)]);
+                        break;
+                    case 7:
+                        cJGM_sun2.push(output[j + (i * 16)]);
+                        break;
+                    case 8:
+                        h_plus.push(output[j + (i * 16)]);
+                        break;
+                    case 9:
+                        h_minus.push(output[j + (i * 16)]);
+                        break;
+                    case 10:
+                        Z_p.push(output[j + (i * 16)]);
+                        break;
+                    case 11:
+                        Z_f.push(output[j + (i * 16)]);
+                        break;
+                    case 12:
+                        Z_b.push(output[j + (i * 16)]);
+                        break;
+                    case 13:
+                        omega_cOmega.push(output[j + (i * 16)]);
+                        break;
+                    case 14:
+                        r_e.push(output[j + (i * 16)]);
+                        break;
+                    case 15:
+                        r_pR_e.push(output[j + (i * 16)]);
+                        break;    
+                
+                    default:
+                        break;
+                };
             };
-   
-       } 
+        };
+     } else {
+        for (let i = 0; i < divider; i++) {
+            for (let j = 0; j < 17; j++) {
+                switch (j) {
+                    case 0:
+                        e_c.push(output[j + (i * 17)]);
+                        break;
+                    case 1:
+                        M.push(output[j + (i * 17)]);
+                        break;
+                    case 2:
+                        M_0.push(output[j + (i * 17)]);
+                        break;
+                    case 3:
+                        R_e.push(output[j + (i * 17)]);
+                        break;
+                    case 4:
+                        Omega.push(output[j + (i * 17)]);
+                        break;
+                    case 5:
+                        Omega_p.push(output[j + (i * 17)]);
+                        break;
+                    case 6:
+                        TW.push(output[j + (i * 17)]);
+                        break;
+                    case 7:
+                        cJGM_sun2.push(output[j + (i * 17)]);
+                        break;
+                    case 8:
+                        I.push(output[j + (i * 17)]);
+                        break;
+                    case 9:
+                        h_plus.push(output[j + (i * 17)]);
+                        break;
+                    case 10:
+                        h_minus.push(output[j + (i * 17)]);
+                        break;
+                    case 11:
+                        Z_p.push(output[j + (i * 17)]);
+                        break;
+                    case 12:
+                        Z_f.push(output[j + (i * 17)]);
+                        break;
+                    case 13:
+                        Z_b.push(output[j + (i * 17)]);
+                        break;
+                    case 14:
+                        omega_cOmega.push(output[j + (i * 17)]);
+                        break;
+                    case 15:
+                        r_e.push(output[j + (i * 17)]);;
+                        break;
+                    case 16:
+                        r_pR_e.push(output[j + (i * 17)]);
+                        break;    
+                
+                    default:
+                        break;
+            };
+        };
+     };
+
+     
         
     };
 
