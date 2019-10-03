@@ -101,7 +101,7 @@ const StarListItem = (props) => {
                         {renderSecondValueSwitch(props)}
                         {renderLimitSwitch(props)}
                         {props.star.measurements !== '0' && props.star.model !== 'test' && <Typography>Individual Dots to measure: {props.star.measurements}</Typography>}
-                        {props.star.model !== 'test' && <Typography>Readings Ignored: {(props.star.readingsIgnored).toString()}</Typography>}
+                        {/*props.star.model !== 'test' && <Typography>Readings Ignored: {(props.star.readingsIgnored).toString()}</Typography>*/}
                 </ExpansionPanelDetails>
                 </ExpansionPanel>
                 <div>

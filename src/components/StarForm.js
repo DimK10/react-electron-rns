@@ -292,11 +292,11 @@ class StarForm extends React.Component {
 
     handleLimitSelectChange = (e) => {
         if(e.target.value === 'limitEnergy') {
-            this.setState(() => ({ limit: 'limitEnergy' }))
+            this.setState(() => ({ limit: 'limitEnergy', limitValue: '0', measurements: '0' }))
         }else if (e.target.value === 'limitSecondValue') {
-            this.setState(() => ({ limit: 'limitSecondValue' }))
+            this.setState(() => ({ limit: 'limitSecondValue', limitValue: '0', measurements: '0' }))
         }else {
-            this.setState(() => ({ limit: 'none' }))
+            this.setState(() => ({ limit: 'none', limitValue: '0', measurements: '0' }))
         };
     };
 
@@ -328,7 +328,7 @@ class StarForm extends React.Component {
     onLimitChange = (e) => {
         const limitValue = e.target.value;
         
-        this.setState(() => ({ limitValue }));
+        this.setState(() => ({ limitValue,  }));
     };
 
         onNumberOfMeasurementsChange = (e) => {
@@ -346,9 +346,9 @@ class StarForm extends React.Component {
         this.setState(() => ({ eosFile }));
     }; 
 
-    handleReadingsChange = () => {
-        this.setState((prevState) => ({ readingsIgnored: !prevState.readingsIgnored }));
-    }
+    // handleReadingsChange = () => {
+    //     this.setState((prevState) => ({ readingsIgnored: !prevState.readingsIgnored }));
+    // }
 
     render() {
         return (
@@ -500,7 +500,7 @@ class StarForm extends React.Component {
                             onChange={this.onNumberOfMeasurementsChange}
                         />
                     }
-                    {
+                    {/*
                         this.state.model !== 'test'
                         &&
                         <FormControlLabel
@@ -513,7 +513,7 @@ class StarForm extends React.Component {
                         }
                         label="Suppress the relative difference in the coordinate equatorial radius from one iteration to the next?"
                       />
-                    }
+                    */}
                     <Button type="submit" variant="contained" color="secondary">
                         {this.props.onEdit ? 'Edit Star' : 'Add Star'}
                     </Button>
