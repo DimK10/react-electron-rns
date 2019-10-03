@@ -29,8 +29,8 @@ class StarForm extends React.Component {
             measurements: props.star ? props.star.measurements : '0',
             limit: props.star ? props.star.limit : 'none',
             limitValue: props.star ? props.star.limitValue : '0',
-            readingsIgnored: props.star ? props.star.readingsIgnored : false,
-            error: ''
+            // readingsIgnored: props.star ? props.star.readingsIgnored : false, This is not needed -- will lead to problems in program -- removing
+            errors: []
         }
     };
 
@@ -57,47 +57,128 @@ class StarForm extends React.Component {
 
     componentWillUnmount(){
         this._isMounted = false;
-    }
+    };
+
+    validate = (
+        starName, 
+        centralEnergyDensity, 
+        labelForSecondInput = '', 
+        valueForSecondInput = '0.0',
+        model,
+        measurements = '0', 
+        limit = 'none', 
+        limitValue = '0'
+        ) => {
+            const errors = [];
+
+            if(starName === '') {
+                errors.push('Star Model\'s name cannot be empty!');
+            };
+            if(model !== 'test' && centralEnergyDensity === '0.0'){
+                errors.push('Central Energy Density can\'t be empty!');
+            };
+
+            if(model !== 'static' && model !== 'kepler' && model !== 'test'){
+                if(valueForSecondInput === '0.0'){
+                    errors.push(`${labelForSecondInput} can\'t be empty!`);
+                };
+
+                if(limit !== 'none' && limitValue === '0'){
+                    errors.push(`You have set limit to ${limit === 'limitEnergy' ? 'Energy' : this.state.labelForSecondInput}! Please provide a limit value!`);
+                };
+
+                if(limit !== 'none' && measurements === '0'){
+                    errors.push('You need to specify how many measurements (outputs) should the rns produce!');
+                };
+            } else {
+                // Push errors for static and kepler models
+                if(model !== 'test' && limit !== 'none' && limitValue === '0'){
+                    errors.push(`You have set limit to ${limit}! Please provide a limit value!`);
+                };
+
+                if(model !== 'test' && limit !== 'none' && measurements === '0'){
+                    errors.push('You need to specify how many measurements (outputs) should the rns produce!');
+                };
+            };
+
+            return errors;
+    };
    
     onSubmit = (e) => {
         e.preventDefault();
 
-        if(this.state.model === 'test' && !this.state.starName){
-            this.setState(() => ({ error: 'Please provide a name for the test model' }));
-        }else if(this.state.model === 'kepler' && (!this.state.starName || !this.state.centralEnergyDensity)){
-            this.setState(() => ({ error: 'Please provide a name, and a value for central Energy Density.' }));
-        }else if (this.state.model !== 'test' && this.state.model !== 'kepler' && (!this.state.starName || !this.state.centralEnergyDensity || !this.state.valueForSecondInput)){
-            this.setState(() => ({ error: `Please provide a name, a value for Energy and a value for ${this.state.labelForSecondInput} ` }));
-        }else if (this.state.model !== 'test' && this.state.model !== 'kepler' && this.state.limit !== 'none' && (!this.state.starName || !this.state.centralEnergyDensity || !this.state.valueForSecondInput || this.state.limitValue === '0' || this.state.measurements === '0')){
-            //Need to check if user selected limit, and so make measurements required too
-            this.setState(() => ({ error: `Please provide a name, a value for Energy and a value for ${this.state.labelForSecondInput} and for limit and for measurements!` }));
-            // if(this.state.limit !== 'none' && (this.state.limitValue === '0' || this.state.measurements === '0')) {
-            //     this.setState(() => ({ error:  `Please provide a name, a value for Energy, a value for ${this.state.labelForSecondInput} and for limit and measurements!`}));
-            // }else{
-            //     this.setState(() => ({ error: `Please provide a name, a value for Energy and a value for ${this.state.labelForSecondInput} ` }));
-            // }
-        }else if (this.state.model === 'test') {
-            this.setState(() => ({ error: '' }));
-            this.props.onSubmit({
-                starName: this.state.starName,
-                eosFile: this.state.eosFile,
-                model: this.state.model
-            });
-        }else {
-            this.setState(() => ({ error: '' }));
-            this.props.onSubmit({
-                starName: this.state.starName,
-                centralEnergyDensity: this.state.centralEnergyDensity,
-                labelForSecondInput: this.state.labelForSecondInput,
-                valueForSecondInput: this.state.valueForSecondInput,
-                eosFile: this.state.eosFile,
-                model: this.state.model,
-                measurements: this.state.measurements === '' ? '0' : this.state.measurements,
-                limit: this.state.limit === '' ? '0' : this.state.limit,
-                limitValue: this.state.limitValue === '' ? '0' : this.state.limitValue,
-                readingsIgnored: this.state.readingsIgnored
-            });
-        };
+        // Re-basing the whole validation
+        const errors = this.validate(
+            this.state.starName, 
+            this.state.centralEnergyDensity, 
+            this.state.labelForSecondInput, 
+            this.state.valueForSecondInput,
+            this.state.model,
+            this.state.measurements, 
+            this.state.limit, 
+            this.state.limitValue);
+
+            if(errors.length === 0) {
+                // No errors -- submit data
+                if(this.state.model === 'test'){
+                    this.props.onSubmit({
+                        starName: this.state.starName,
+                        eosFile: this.state.eosFile,
+                        model: this.state.model
+                    });
+                } else {
+                    this.props.onSubmit({
+                        starName: this.state.starName,
+                        centralEnergyDensity: this.state.centralEnergyDensity,
+                        labelForSecondInput: this.state.labelForSecondInput,
+                        valueForSecondInput: this.state.valueForSecondInput,
+                        eosFile: this.state.eosFile,
+                        model: this.state.model,
+                        measurements: this.state.measurements === '' ? '0' : this.state.measurements,
+                        limit: this.state.limit === '' ? '0' : this.state.limit,
+                        limitValue: this.state.limitValue === '' ? '0' : this.state.limitValue,
+                    });
+                };
+            } else {
+                this.setState({ errors });
+            };
+
+        // if(this.state.model === 'test' && !this.state.starName){
+        //     this.setState(() => ({ error: 'Please provide a name for the test model' }));
+        // }else if(this.state.model === 'kepler' && (!this.state.starName || !this.state.centralEnergyDensity)){
+        //     this.setState(() => ({ error: 'Please provide a name, and a value for central Energy Density.' }));
+        // }else if (this.state.model !== 'test' && this.state.model !== 'kepler' && (!this.state.starName || !this.state.centralEnergyDensity || !this.state.valueForSecondInput)){
+        //     this.setState(() => ({ error: `Please provide a name, a value for Energy and a value for ${this.state.labelForSecondInput} ` }));
+        // }else if (this.state.model !== 'test' && this.state.model !== 'kepler' && this.state.limit !== 'none' && (!this.state.starName || !this.state.centralEnergyDensity || !this.state.valueForSecondInput || this.state.limitValue === '0' || this.state.measurements === '0')){
+        //     //Need to check if user selected limit, and so make measurements required too
+        //     this.setState(() => ({ error: `Please provide a name, a value for Energy and a value for ${this.state.labelForSecondInput} and for limit and for measurements!` }));
+        //     // if(this.state.limit !== 'none' && (this.state.limitValue === '0' || this.state.measurements === '0')) {
+        //     //     this.setState(() => ({ error:  `Please provide a name, a value for Energy, a value for ${this.state.labelForSecondInput} and for limit and measurements!`}));
+        //     // }else{
+        //     //     this.setState(() => ({ error: `Please provide a name, a value for Energy and a value for ${this.state.labelForSecondInput} ` }));
+        //     // }
+        // }else if (this.state.model === 'test') {
+        //     this.setState(() => ({ error: '' }));
+        //     this.props.onSubmit({
+        //         starName: this.state.starName,
+        //         eosFile: this.state.eosFile,
+        //         model: this.state.model
+        //     });
+        // }else {
+        //     this.setState(() => ({ error: '' }));
+        //     this.props.onSubmit({
+        //         starName: this.state.starName,
+        //         centralEnergyDensity: this.state.centralEnergyDensity,
+        //         labelForSecondInput: this.state.labelForSecondInput,
+        //         valueForSecondInput: this.state.valueForSecondInput,
+        //         eosFile: this.state.eosFile,
+        //         model: this.state.model,
+        //         measurements: this.state.measurements === '' ? '0' : this.state.measurements,
+        //         limit: this.state.limit === '' ? '0' : this.state.limit,
+        //         limitValue: this.state.limitValue === '' ? '0' : this.state.limitValue,
+        //         readingsIgnored: this.state.readingsIgnored
+        //     });
+        // };
     };
 
     onstarNameChange = (e) => {
@@ -111,49 +192,93 @@ class StarForm extends React.Component {
                 this.setState((prevState) => ({
                     model: 'model', 
                     labelForSecondInput: 'Axes Ratio', 
-                    valueForSecondInput: prevState.valueForSecondInput 
+                    // valueForSecondInput: prevState.valueForSecondInput 
+                    centralEnergyDensity: '0.0', 
+                    valueForSecondInput: '0.0', 
+                    measurements: '0', 
+                    limit: 'none', 
+                    limitValue: '0'
                 }));
                 break;
             case 'gmass':
                 this.setState((prevState) => ({ 
                     model: 'gmass', 
                     labelForSecondInput: 'Mass', 
-                    valueForSecondInput: prevState.valueForSecondInput 
+                    // valueForSecondInput: prevState.valueForSecondInput 
+                    centralEnergyDensity: '0.0', 
+                    valueForSecondInput: '0.0', 
+                    measurements: '0', 
+                    limit: 'none', 
+                    limitValue: '0'
                 }));
                 break;
             case 'rmass':
                 this.setState((prevState) => ({ 
                     model: 'rmass', 
                     labelForSecondInput: 'Rest Mass', 
-                    valueForSecondInput: prevState.valueForSecondInput 
+                    // valueForSecondInput: prevState.valueForSecondInput 
+                    centralEnergyDensity: '0.0', 
+                    valueForSecondInput: '0.0', 
+                    measurements: '0', 
+                    limit: 'none', 
+                    limitValue: '0'
                 }));
                 break;
             case 'omega':
                 this.setState((prevState) => ({ 
                     model: 'omega', 
                     labelForSecondInput: 'Angular Velocity', 
-                    valueForSecondInput: prevState.valueForSecondInput 
+                    // valueForSecondInput: prevState.valueForSecondInput 
+                    centralEnergyDensity: '0.0', 
+                    valueForSecondInput: '0.0', 
+                    measurements: '0', 
+                    limit: 'none', 
+                    limitValue: '0'
                 }));
                 break;
             case 'jmoment':
                 this.setState((prevState) => ({ 
                     model: 'jmoment', 
+                    // labelForSecondInput: 'Angular Momentum', 
+                    // valueForSecondInput: prevState.valueForSecondInput 
+                    centralEnergyDensity: '0.0', 
                     labelForSecondInput: 'Angular Momentum', 
-                    valueForSecondInput: prevState.valueForSecondInput 
+                    valueForSecondInput: '0.0', 
+                    measurements: '0', 
+                    limit: 'none', 
+                    limitValue: '0'
                 }));
                 break;
             case 'static':
-                this.setState(() => ({ model: 'static' }));
+                this.setState(() => ({ 
+                    model: 'static', 
+                    centralEnergyDensity: '0.0', 
+                    valueForSecondInput: '0.0', 
+                    measurements: '0', 
+                    limit: 'none', 
+                    limitValue: '0' 
+                }));
                 break;
             case 'kepler':
                 this.setState((prevState) => ({ 
                     model: 'kepler', 
+                    centralEnergyDensity: '0.0',
                     labelForSecondInput: 'Tolerance',
-                    valueForSecondInput: prevState.valueForSecondInput 
+                    valueForSecondInput: '0.0',
+                    measurements: '0', 
+                    limit: 'none', 
+                    limitValue: '0' 
                 }));
                 break;
             case 'test':
-                this.setState(() => ({ model: 'test' }));
+                this.setState(() => ({ 
+                    model: 'test',
+                    centralEnergyDensity: '0.0', 
+                    valueForSecondInput: '0.0', 
+                    measurements: '0', 
+                    limit: 'none', 
+                    limitValue: '0' 
+                }));
                 break;
             default:
                 this.setState((prevState) => ({
@@ -228,8 +353,19 @@ class StarForm extends React.Component {
     render() {
         return (
             <div>
-                {this.state.error && <Typography color="error" variant="subtitle2">{this.state.error}</Typography>}
-                <form onSubmit={this.onSubmit} className="container">
+                {/* this.state.error && <Typography color="error" variant="subtitle2">{this.state.errors}</Typography> */}
+                {
+                    this.state.errors.length !== 0 
+                    && 
+                    <ul className="errorList">
+                        {
+                            this.state.errors.map(error => {
+                                return <li key={error}><Typography color="error" variant="subtitle1">❌ {error}</Typography></li>
+                            })
+                        }
+                    </ul>
+                }
+                <form onSubmit={this.onSubmit} className="formContainer">
                     <TextField
                         id="standard-with-placeholder"
                         label="Star Model Name"
