@@ -1,16 +1,17 @@
 .Starlist-container {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
     text-align: center;
+    flex-direction: column;
 }
 
 .listOfModels {
     display: flex;
-    flex-direction: column;
     justify-content: center;
+    flex-direction: column;
 }
 
 .model {
-    display: flex;
-    flex-direction: row;
-    justify-content: center !important;
-    padding: 15px;
+   
 }

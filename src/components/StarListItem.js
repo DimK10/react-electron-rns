@@ -101,15 +101,19 @@ const StarListItem = (props) => {
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                 </div>
-                <div>
-                    <Fab color="secondary" aria-label="edit" className={classes.fab} size="small">
-                        <Link to={`/edit/${props.star.id}`} className={classes.link}>
-                            <EditIcon />
-                        </Link>
-                    </Fab>
-                    <Fab aria-label="delete" className={classes.fab} size="small" onClick={onRemove}>
-                        <DeleteIcon />
-                    </Fab>
+                <div className="buttons">
+                    <div className="btn-edit">
+                        <Fab color="secondary" aria-label="edit" className={classes.fab} size="small">
+                            <Link to={`/edit/${props.star.id}`} className={classes.link}>
+                                <EditIcon />
+                            </Link>
+                        </Fab>
+                    </div>
+                    <div className="btn-delete">
+                        <Fab aria-label="delete" className={classes.fab} size="small" onClick={onRemove}>
+                            <DeleteIcon />
+                        </Fab>
+                    </div>
                 </div>
             </div>
     );

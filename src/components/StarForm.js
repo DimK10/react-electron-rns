@@ -74,7 +74,7 @@ class StarForm extends React.Component {
             if(starName === '') {
                 errors.push('Star Model\'s name cannot be empty!');
             };
-            if(model !== 'test' && centralEnergyDensity === '0.0'){
+            if(model !== 'test' && ( centralEnergyDensity === '0.0' || centralEnergyDensity === '')){ // SOS Check for all values!  
                 errors.push('Central Energy Density can\'t be empty!');
             };
 
