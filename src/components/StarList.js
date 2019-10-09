@@ -50,7 +50,7 @@ export class StarList extends React.Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="Starlist-container">
                 {
                     this.props.stars.length !== 0 && !this.state.loading
                     ? (
@@ -67,13 +67,16 @@ export class StarList extends React.Component {
                         )
                     )
                 }
-                {
-                    !this.state.loading
-                    &&
-                    [...this.props.stars].reverse().map((star) => {
-                        return <StarListItem key={star.id} star={star} />
-                    })
-                }
+                <div className="listOfModels">
+                    {
+                        !this.state.loading
+                        &&
+                        [...this.props.stars].reverse().map((star) => {
+                            return <div className="model"><StarListItem key={star.id} star={star} /></div>
+                        })
+                    }
+                </div>
+                {/* Move the below button to starDashboadPage */}
                 {
                     this.props.stars.length !== 0 
                     && 

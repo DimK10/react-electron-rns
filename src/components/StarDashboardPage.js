@@ -38,21 +38,28 @@ class StarDashboardPage extends React.Component{
 
     render() {
         return(
-            <div>
-                <div className="links"/*className={this.classes.links}*/>
-                   {
-                       !this.state.loading
-                       &&
+            <div className="StarDashboardPage-container">
+                <div className="StarDashboardPage-wrapper">
+                    <div className="models">
+                        <StarList parentCallback = {this.updateLoading} />
+                    </div>
+                    <div className="links"/*className={this.classes.links}*/>
+                    {
+                        !this.state.loading
+                        &&
                         <NavLink to="/create" activeClassName="is-active" className="navlink"/*className={this.classes.navlink}*/>
                             <Fab variant="extended" color="primary" aria-label="add">
                                 <AddIcon /> 
                                 <Typography> Add A Model</Typography>
                             </Fab>
                         </NavLink>
-                   }
+                    }
+                    </div>
+                    
                 </div>
-            <StarList parentCallback = {this.updateLoading} />
             </div>
+            
+                
         );
     }
   };

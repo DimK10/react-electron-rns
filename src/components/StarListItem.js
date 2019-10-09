@@ -11,10 +11,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { connect } from 'react-redux';
 import { removeStar } from '../actions/stars';
+import '../styles/StarListItem.css'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: '100%',
         display: "flex",
         flexDirection: "column",
         justifyContent: "center"
@@ -22,11 +22,6 @@ const useStyles = makeStyles(theme => ({
     heading: {
       fontSize: theme.typography.pxToRem(15),
       fontWeight: theme.typography.fontWeightRegular,
-    },
-    fabWrapper: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
     },
     fab: {
         margin: theme.spacing(0)
@@ -85,25 +80,27 @@ const StarListItem = (props) => {
         };
         console.log(props.star);
         return (
-            <div className={classes.fabWrapper}>
-                <ExpansionPanel>
-                <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <Typography className={classes.heading}>{props.star.starName}</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={classes.root}>
-                        <Typography>Model: {props.star.model}</Typography>
-                        <Typography>eos File Selected: {props.star.eosFile}</Typography>
-                        {props.star.model !== 'test' && <Typography>Energy: {props.star.centralEnergyDensity}</Typography>}
-                        {renderSecondValueSwitch(props)}
-                        {renderLimitSwitch(props)}
-                        {props.star.measurements !== '0' && props.star.model !== 'test' && <Typography>Individual Dots to measure: {props.star.measurements}</Typography>}
-                        {/*props.star.model !== 'test' && <Typography>Readings Ignored: {(props.star.readingsIgnored).toString()}</Typography>*/}
-                </ExpansionPanelDetails>
-                </ExpansionPanel>
+            <div className="fabWrapper">
+                <div className="expansionPanel">
+                    <ExpansionPanel>
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography className={classes.heading}>{props.star.starName}</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails className={classes.root}>
+                                <Typography>Model: {props.star.model}</Typography>
+                                <Typography>eos File Selected: {props.star.eosFile}</Typography>
+                                {props.star.model !== 'test' && <Typography>Energy: {props.star.centralEnergyDensity}</Typography>}
+                                {renderSecondValueSwitch(props)}
+                                {renderLimitSwitch(props)}
+                                {props.star.measurements !== '0' && props.star.model !== 'test' && <Typography>Individual Dots to measure: {props.star.measurements}</Typography>}
+                                {/*props.star.model !== 'test' && <Typography>Readings Ignored: {(props.star.readingsIgnored).toString()}</Typography>*/}
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                </div>
                 <div>
                     <Fab color="secondary" aria-label="edit" className={classes.fab} size="small">
                         <Link to={`/edit/${props.star.id}`} className={classes.link}>

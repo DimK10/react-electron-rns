@@ -16,7 +16,13 @@ export class ChartPage extends React.Component {
         this.state = {
             xValues: [],
             datasets: [], // For multiple plots
-            colors: [],
+            colors: [
+                '#0000FF',  // Blue
+                '#FF0000',   // Red
+                '#008000',  // Green 
+                '#FFA500', // Orange
+                '#A52A2A'
+            ],
             xAxis: 'R_e', // Default value
             yAxis: 'M',
             allValues: [
@@ -150,6 +156,14 @@ export class ChartPage extends React.Component {
     changeYAxis = (shouldReverseData) => {
         this.setState({ datasets: [] });
         for (let i = 0; i < this.props.location.state.chartData.length; i++) {
+            
+            let color = '';
+            if( 0 <= i && i <= 4 ){
+                color = this.state.colors[i];
+            } else {
+                color = randomColor({ luminosity: dark }).toString();
+            };
+
             switch (this.state.yAxis) {
                 case 'e_c':
                     this.setState((prevState) => ({ 
@@ -157,7 +171,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].e_c
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'M':
@@ -166,7 +180,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: shouldReverseData ? this.props.location.state.chartData[i].M.reverse() : this.props.location.state.chartData[i].M
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'M_0':
@@ -175,7 +189,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].M_0
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'R_e':
@@ -184,7 +198,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: shouldReverseData ? this.props.location.state.chartData[i].R_e.reverse() : this.props.location.state.chartData[i].R_e.reverse()
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'Omega':
@@ -193,7 +207,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].Omega
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'Omega_p':
@@ -202,7 +216,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].Omega_p
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'TW':
@@ -211,7 +225,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].TW
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'cJGM_sun2':
@@ -220,7 +234,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].cJGM_sun2
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;  
                 case 'I':
@@ -229,7 +243,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].I
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'h_plus':
@@ -238,7 +252,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].h_plus
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'h_minus':
@@ -247,7 +261,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].h_minus
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'Z_p':
@@ -256,7 +270,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].Z_p
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'Z_f':
@@ -265,7 +279,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].Z_f
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'Z_b':
@@ -274,7 +288,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].Z_b
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'omega_cOmega':
@@ -283,7 +297,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].omega_cOmega
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'r_e':
@@ -292,7 +306,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].r_e
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
                 case 'r_pR_e':
@@ -301,7 +315,7 @@ export class ChartPage extends React.Component {
                             name: 'model ' + (i + 1),
                             values: this.props.location.state.chartData[i].r_pR_e
                         }],
-                        colors: [...prevState.colors, randomColor({ luminosity: dark }).toString()]
+                        colors: [...prevState.colors, color]
                         }));
                     break;
             
@@ -309,6 +323,10 @@ export class ChartPage extends React.Component {
                     break;
             };
         };
+    };
+
+    onTitleChange = () => {
+        return `Chart With ${this.state.yAxis} in Y Axis and ${this.state.xAxis} in X Axis`
     };
 
     render(){
@@ -346,9 +364,10 @@ export class ChartPage extends React.Component {
                         </div>
                     </div>
                 </div>
+                {<Typography>Chart With {this.state.yAxis} in Y Axis and {this.state.xAxis} in X Axis</Typography>}
                 <div className="chart">
                     <ReactFrappeChart
-                        title = "Chart With M in Y Axis and R_e in X Axis:"
+                        title = ""
                         type="line"
                         colors={this.state.colors}
                         axisOptions={{ xAxisMode: "tick", yAxisMode: "tick", xIsSeries: 1 }}

@@ -1,0 +1,10 @@
+.fabWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-right: 30px;
+}
+
+.expansionPanel {
+    margin-right: 10px;
+}
