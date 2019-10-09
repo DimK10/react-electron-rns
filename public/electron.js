@@ -3,8 +3,8 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const expressServer = require('../server/server');
 const path = require('path');
-const isDev = require('electron-is-dev');
-// const isDev = false; //Testing purposes
+// const isDev = require('electron-is-dev');
+const isDev = false; //Testing purposes
 
 let mainWindow;
 
@@ -17,7 +17,7 @@ function createWindow() {
   
     // Open the DevTools.
     //BrowserWindow.addDevToolsExtension('<location to your react chrome extension>');
-    mainWindow.openDevTools();
+    // mainWindow.openDevTools();
   
   mainWindow.on('closed', () => mainWindow = null);
 }

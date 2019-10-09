@@ -22,18 +22,22 @@ async function connectToEngine(starModel) {
 
     return new Promise((resolve, reject) => {
 
-        let pathToEosFile = path.join(__dirname, '..', '..', 'resources', 'eos-files');
+        // let pathToEosFile = path.join(__dirname, '..', '..', 'resources', 'eos-files'); // For dev
+        let pathToEosFile = path.join(__dirname, '..', '..', '..', 'eos-files'); // For prod as exe
         console.log('starModels model:', starModel.model);
-        
+        console.log('pathToEosFile:', pathToEosFile);
+  
         let pathToRnsExecutable = '';
         switch (os) {
             case 'win32':
-                pathToRnsExecutable = path.join(__dirname, '..', '..', 'resources', 'engine', 'windows', 'rns.exe');
+                // pathToRnsExecutable = path.join(__dirname, '..', '..', 'resources', 'engine', 'windows', 'rns.exe'); // For Dev
+                pathToRnsExecutable = path.join(__dirname, '..', '..', '..', 'engine', 'windows', 'rns.exe'); // For prod as exe
                 console.log('Path to rns file:', pathToRnsExecutable);
                 break;
 
             case  'linux':
-                pathToRnsExecutable = path.join(__dirname, '..', '..', 'resources', 'engine', 'linux', '/rns');
+                // pathToRnsExecutable = path.join(__dirname, '..', '..', 'resources', 'engine', 'linux', '/rns'); // For Dev
+                pathToRnsExecutable = path.join(__dirname, '..', '..', '..', 'engine', 'linux', '/rns'); // For prod as exe
                 console.log('Path to rns file:', pathToRnsExecutable);
                 break
         

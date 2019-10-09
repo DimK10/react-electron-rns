@@ -40,8 +40,10 @@ class StarForm extends React.Component {
         getEosFiles()
         .then((eosFiles) => {
             if(this._isMounted){
-                console.log(eosFiles[0]);
+                // console.log(eosFiles[0]);
                 this.setState(() => ({ eosFiles }));
+                console.log('eosFiles:', this.state.eosFiles);
+                
             }
         });
     }
@@ -79,24 +81,24 @@ class StarForm extends React.Component {
             };
 
             if(model !== 'static' && model !== 'kepler' && model !== 'test'){
-                if(valueForSecondInput === '0.0'){
+                if(valueForSecondInput === '0.0' || valueForSecondInput === ''){
                     errors.push(`${labelForSecondInput} can\'t be empty!`);
                 };
 
-                if(limit !== 'none' && limitValue === '0'){
+                if(limit !== 'none' && (limitValue === '0' || limitValue === '')){
                     errors.push(`You have set limit to ${limit === 'limitEnergy' ? 'Energy' : this.state.labelForSecondInput}! Please provide a limit value!`);
                 };
 
-                if(limit !== 'none' && measurements === '0'){
+                if(limit !== 'none' && ( measurements === '0' || measurements === '' )){
                     errors.push('You need to specify how many measurements (outputs) should the rns produce!');
                 };
             } else {
                 // Push errors for static and kepler models
-                if(model !== 'test' && limit !== 'none' && limitValue === '0'){
+                if(model !== 'test' && limit !== 'none' && ( limitValue === '0' || limitValue === '' )){
                     errors.push(`You have set limit to ${limit}! Please provide a limit value!`);
                 };
 
-                if(model !== 'test' && limit !== 'none' && measurements === '0'){
+                if(model !== 'test' && limit !== 'none' && (measurements === '0' || measurements === '')){
                     errors.push('You need to specify how many measurements (outputs) should the rns produce!');
                 };
             };

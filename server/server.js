@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const connectToEngine = require('./utils/connectToEngine');
 const extractValues = require('./utils/extractValues');
 const sortData = require('./utils/sortData');
-// const isDev = false; //Testing purposes
+const isDev = false; //Testing purposes
 
 
 
@@ -17,8 +17,9 @@ const expressServer = (isDev) => {
 
     
 
-    // const eosPathBuild = path.join(__dirname, '../../eos-files'); This is the right one for production 
-    const eosPath = isDev ? path.join(__dirname, '..', 'resources', 'eos-files') : path.join(__dirname, '../../eos-files');
+    const eosPathBuildProd = path.join(__dirname, '../../eos-files'); //This is the right one for production 
+    //const eosPathBuild = path.join(__dirname, '../resources/eos-files'); // This is for testing the build
+    // const eosPath = isDev ? path.join(__dirname, '..', 'resources', 'eos-files') : path.join(__dirname, '../../eos-files');
 
     const app = express();
 
@@ -45,9 +46,9 @@ const expressServer = (isDev) => {
     } else {
         app.use(express.static(publicPath));
 
-        app.get('*', (req, res) => {
-            res.sendFile(path.join(publicPath, 'index.html'));
-        });
+        // app.get('*', (req, res) => { // This causes eos files to fail to load -- removing
+        //     res.sendFile(path.join(publicPath, 'index.html'));
+        // });
     }
     
     app.use(bodyParser.urlencoded({
@@ -60,13 +61,15 @@ const expressServer = (isDev) => {
         // const eosPath = path.join(__dirname, '..', 'public', 'eos-files');
         // const eosPathBuild = path.join(path.dirname(__dirname), 'eos-files');
 
-        fs.readdir(eosPath, (err, files) => {
+        fs.readdir(eosPathBuildProd, (err, files) => {
             if(err){
-                res.send('error in readind the eos-file folder. ' + 'Path: ' + eosPath +' Error: ' + err);
+                res.send('error in readind the eos-file folder. ' + 'Path: ' + eosPathBuildProd +' Error: ' + err);
             }else {
                 if (files.length === 0){
                     res.send(['No eos files in folder!']);
                 }else{
+                    console.log('files:', files);
+                    
                     res.send(files);
                 }
             }
@@ -147,7 +150,7 @@ const expressServer = (isDev) => {
     });
 
       app.listen(port, () => {
-          console.log('server is up in ' + port + ' eosPath: ' + eosPath);
+          console.log('server is up in ' + port + ' eosPath: ' + eosPathBuildProd + ' dirName: ' + __dirname);
       });
 
 };
